@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- 社交平台分享时的富文本卡片信息 (SEO & Open Graph) -->
+    <meta property="og:title" content="莫奈ReMonet - 游戏叙事策划/编剧作品集">
+    <meta property="og:description" content="为虚拟世界注入“灵魂”与“温度”。擅长世界观架构、网状叙事及有血有肉的角色塑造。">
+    <!-- 默认的分享预览图，您也可以替换成自己的名片图 -->
+    <meta property="og:image" content="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&q=80&w=1200">
+    <meta property="og:type" content="website">
+
+    <title>莫奈ReMonet - 游戏叙事策划/编剧</title>
+    <!-- 引入 Tailwind CSS 进行排版 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Lucide 图标库 -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- 引入谷歌字体：Nunito带来圆润亲切的视觉体验，Dancing Script用于钢笔手写水印 -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Nunito:wght@400;700;900&family=Noto+Sans+SC:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 移动端防溢出核心代码 */
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100vw;
+        }
+
+        body {
+            /* 主字体使用圆润字体搭配黑体 */
+            font-family: 'Nunito', 'Noto Sans SC', sans-serif;
+            background-color: #FFF9F0; /* 暖调奶白背景 */
+            color: #2D2422; /* 暖深褐色替代纯黑，更柔和 */
+            
+            /* 全局游戏化定制鼠标指针 (剑，剑尖朝向左上) */
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><text x='16' y='24' font-size='24' text-anchor='middle' transform='rotate(90 16 16)'>🗡️</text></svg>") 0 0, auto;
+        }
+
+        /* 可点击元素的交互指针 (小星星) */
+        button, a, .cursor-pointer, .pop-btn, .accordion-item button {
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><text y='24' font-size='24'>✨</text></svg>") 16 16, pointer !important;
+        }
+
+        /* 波普风/手绘感圆润卡片 */
+        .pop-box {
+            background-color: #ffffff;
+            border: 4px solid #2D2422;
+            border-radius: 2rem;
+            box-shadow: 8px 8px 0px 0px rgba(45, 36, 34, 0.15);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .pop-box:hover {
+            transform: translateY(-6px);
+            box-shadow: 8px 14px 0px 0px rgba(45, 36, 34, 0.25);
+        }
+        
+        /* 圆润的药丸按钮 */
+        .pop-btn {
+            border: 4px solid #2D2422;
+            border-radius: 9999px;
+            box-shadow: 4px 4px 0px 0px #2D2422;
+            transition: all 0.2s ease;
+            font-weight: 800;
+        }
+        .pop-btn:active {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0px 0px #2D2422;
+        }
+
+        /* 隐藏横向滚动条但保留滚动功能 */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* 游戏化粗边框横向滚动条 */
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(45, 36, 34, 0.05);
+            border-radius: 9999px;
+            margin: 0 20px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #2D2422;
+            border-radius: 9999px;
+            border: 2px solid #FFF9F0;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background-color: #FF6B6B;
+        }
+        .custom-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: #2D2422 rgba(45, 36, 34, 0.05);
+        }
+
+        /* 拖拽滚动防误触交互 */
+        .drag-scroll {
+            cursor: grab;
+        }
+        .drag-scroll:active {
+            cursor: grabbing;
+        }
+        .drag-scroll.is-dragging * {
+            pointer-events: none !important; /* 拖拽时禁用子元素点击，防止误触 */
+        }
+
+        /* 背景装饰用的模糊彩色大圆 */
+        .bg-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+        }
+
+        /* 无缝循环滚动动画 */
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            animation: marquee 25s linear infinite;
+        }
+
+        /* 隐藏元素的过渡类 */
+        .opacity-0-invisible {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .opacity-100-visible {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* 音乐播放时的慢速旋转动画 */
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: spin-slow 4s linear infinite;
+        }
+        
+        /* 淡入动画（用于页签切换） */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen selection:bg-[#FF6B6B] selection:text-white relative">
+
+    <!-- 背景色彩圆形光晕 -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none z-[-1]">
+        <div class="bg-blob w-[500px] h-[500px] bg-[#FFD93D] top-[-100px] left-[-150px]"></div>
+        <div class="bg-blob w-[600px] h-[600px] bg-[#FF6B6B] top-[20%] right-[-200px] opacity-40"></div>
+        <div class="bg-blob w-[400px] h-[400px] bg-[#4D96FF] bottom-[10%] left-[-100px] opacity-30"></div>
+    </div>
+
+    <!-- 导航栏 -->
+    <nav class="sticky top-0 z-50 bg-[#FFF9F0]/90 backdrop-blur-md border-b-4 border-[#2D2422]">
+        <div class="max-w-6xl mx-auto px-4 md:px-6 py-3 md:py-4 flex flex-wrap justify-between items-center gap-y-3">
+            <span class="text-xl md:text-2xl font-black tracking-wider flex items-center gap-2 shrink-0">
+                <div class="bg-[#FFD93D] p-1.5 rounded-full border-2 border-[#2D2422]">
+                    <i data-lucide="sparkles" class="w-4 h-4 md:w-5 md:h-5 text-[#2D2422]"></i>
+                </div>
+                ReMonet
+            </span>
+            
+            <!-- 多语言切换按钮 -->
+            <div class="flex items-center gap-1.5 md:gap-2 border-l-4 border-transparent md:border-[#2D2422] pl-0 md:pl-6 ml-auto md:ml-2 order-2 md:order-3 shrink-0">
+                <button onclick="setLanguage('zh')" id="lang-btn-zh" class="bg-[#FF6B6B] text-white text-xs font-black px-2 py-1 rounded-md border-2 border-[#2D2422] shadow-[2px_2px_0px_0px_#2D2422] transition-colors">中</button>
+                <button onclick="setLanguage('en')" id="lang-btn-en" class="bg-white text-[#2D2422] text-xs font-black px-2 py-1 rounded-md border-2 border-[#2D2422] shadow-[2px_2px_0px_0px_#2D2422] hover:bg-gray-100 transition-colors">EN</button>
+                <button onclick="setLanguage('ja')" id="lang-btn-ja" class="bg-white text-[#2D2422] text-xs font-black px-2 py-1 rounded-md border-2 border-[#2D2422] shadow-[2px_2px_0px_0px_#2D2422] hover:bg-gray-100 transition-colors">日</button>
+            </div>
+
+            <!-- 导航链接 -->
+            <div class="w-full md:w-auto flex items-center justify-start md:justify-end space-x-4 md:space-x-6 text-sm md:text-base font-bold overflow-x-auto hide-scrollbar order-3 md:order-2 pb-1 md:pb-0">
+                <a href="#about" class="hover:text-[#FF6B6B] transition-colors shrink-0" data-i18n="nav_about">技能调色盘</a>
+                <a href="#works" class="hover:text-[#FF6B6B] transition-colors shrink-0" data-i18n="nav_works">作品集书架</a>
+                <a href="#experience" class="hover:text-[#FF6B6B] transition-colors shrink-0" data-i18n="nav_exp">经典战役</a>
+                <a href="#contact" class="hover:text-[#FF6B6B] transition-colors shrink-0" data-i18n="nav_contact">组队邀请</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero 区域 -->
+    <header class="max-w-6xl mx-auto px-4 md:px-6 py-12 md:py-32 flex flex-col justify-center min-h-[75vh] relative z-10 overflow-hidden">
+        <!-- 艺术字水印 -->
+        <div class="absolute top-10 md:top-[0%] right-[-5%] md:right-[5%] transform rotate-[-12deg] select-none pointer-events-none -z-10">
+            <span class="text-[80px] sm:text-[120px] md:text-[240px] text-[#FF6B6B] opacity-15" style="font-family: 'Dancing Script', cursive; line-height: 1;">ReMonet</span>
+        </div>
+
+        <div class="max-w-3xl relative z-10">
+            <!-- 暖色圆润小标签 -->
+            <div class="inline-flex flex-wrap items-center gap-2 px-5 py-2.5 bg-white border-4 border-[#2D2422] rounded-full md:rounded-full shadow-[4px_4px_0px_0px_#2D2422] font-bold text-sm mb-8">
+                <span class="w-3 h-3 rounded-full bg-[#38E54D] border-2 border-[#2D2422] animate-bounce shrink-0"></span>
+                <span data-i18n="status_text">Status: 羽毛笔自动寻路中o_0</span>
+            </div>
+            
+            <h1 class="text-4xl sm:text-5xl md:text-7xl font-black leading-[1.2] mb-6 tracking-tight">
+                <span data-i18n="hero_title_1">为虚拟世界注入<br class="hidden sm:block"/></span>
+                <span class="relative inline-block mt-2">
+                    <span class="relative z-10 text-white bg-[#FF6B6B] px-4 py-1 rounded-2xl border-4 border-[#2D2422] inline-block transform -rotate-2 break-words" data-i18n="hero_title_2">
+                        “灵魂”与“温度”
+                    </span>
+                    <i data-lucide="star" class="absolute -top-6 -right-4 md:-right-8 w-6 h-6 md:w-8 md:h-8 text-[#FFD93D] fill-[#FFD93D] transform rotate-12"></i>
+                </span>
+            </h1>
+            
+            <p class="text-base sm:text-lg md:text-xl text-[#5C4F4D] mb-10 max-w-2xl font-bold leading-relaxed bg-white/50 p-6 rounded-3xl border-2 border-[#2D2422]/10" data-i18n="hero_desc">
+                Hi！这里是莫奈ReMonet，一名热爱讲故事的 <span class="text-[#FF6B6B]">游戏文案/叙事策划/编剧</span>。<br>
+                我坚信最棒的叙事不是生硬的说教，而是让玩家在笑容与泪水中，与角色产生跨越次元的共鸣。擅长世界观架构、网状叙事及有血有肉的角色塑造。
+            </p>
+            
+            <div class="flex flex-wrap gap-4 md:gap-5">
+                <a href="#works" class="pop-btn bg-[#FFD93D] text-[#2D2422] px-6 md:px-8 py-3 md:py-4 text-base md:text-lg flex items-center justify-center hover:bg-[#FFE169] w-full sm:w-auto">
+                    <span data-i18n="btn_works">翻阅书架</span> <i data-lucide="book-open" class="w-5 h-5 ml-2"></i>
+                </a>
+                <a href="#contact" class="pop-btn bg-white text-[#2D2422] px-6 md:px-8 py-3 md:py-4 text-base md:text-lg hover:bg-gray-50 flex items-center justify-center w-full sm:w-auto">
+                    <span data-i18n="btn_contact">隔空交流的魔法</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 分割线 -->
+    <div class="relative w-full -mb-1 z-20">
+        <svg viewBox="0 0 1440 120" class="w-full h-auto text-[#FF6B6B] fill-current" preserveAspectRatio="none">
+            <path d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,42,1280,53,1360,58.7L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"></path>
+        </svg>
+    </div>
+
+    <!-- 技能调色盘 -->
+    <section id="about" class="bg-[#FF6B6B] py-16 md:py-24 relative z-10">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-12 md:mb-16">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight inline-block relative">
+                    <span data-i18n="about_title">技能调色盘</span>
+                    <div class="absolute -bottom-2 md:-bottom-4 left-0 w-full h-2 md:h-3 bg-[#FFD93D] rounded-full z-[-1]"></div>
+                </h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                <!-- 技能卡片 -->
+                <div class="pop-box p-6 md:p-8 flex flex-col relative overflow-hidden group">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-12 h-12 md:w-14 md:h-14 shrink-0 bg-[#FFD93D] rounded-full border-4 border-[#2D2422] flex items-center justify-center shadow-[4px_4px_0px_0px_#2D2422] group-hover:scale-110 transition-transform">
+                            <i data-lucide="map" class="w-6 h-6 md:w-7 md:h-7 text-[#2D2422]"></i>
+                        </div>
+                        <h3 class="text-xl md:text-2xl font-black" data-i18n="skill_1_title">世界观架构</h3>
+                    </div>
+                    <p class="text-[#5C4F4D] font-bold text-sm leading-relaxed flex-grow" data-i18n="skill_1_desc">
+                        绘制世界的蓝图。从创世神话到市井烟火，搭建逻辑自洽且充满奇观的底层世界观，为美术和关卡提供源源不断的灵感基石。
+                    </p>
+                </div>
+                
+                <div class="pop-box p-6 md:p-8 flex flex-col relative overflow-hidden group">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-12 h-12 md:w-14 md:h-14 shrink-0 bg-[#38E54D] rounded-full border-4 border-[#2D2422] flex items-center justify-center shadow-[4px_4px_0px_0px_#2D2422] group-hover:scale-110 transition-transform">
+                            <i data-lucide="git-branch-plus" class="w-6 h-6 md:w-7 md:h-7 text-[#2D2422]"></i>
+                        </div>
+                        <h3 class="text-xl md:text-2xl font-black" data-i18n="skill_2_title">网状分支叙事</h3>
+                    </div>
+                    <p class="text-[#5C4F4D] font-bold text-sm leading-relaxed flex-grow" data-i18n="skill_2_desc">
+                        每一个选择都有分量。设计复杂的任务网结构与多结局走向，追求在主线演出与支线探索中平衡剧情的情感张力。
+                    </p>
+                </div>
+
+                <div class="pop-box p-6 md:p-8 flex flex-col relative overflow-hidden group">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-12 h-12 md:w-14 md:h-14 shrink-0 bg-[#FF9F43] rounded-full border-4 border-[#2D2422] flex items-center justify-center shadow-[4px_4px_0px_0px_#2D2422] group-hover:scale-110 transition-transform">
+                            <i data-lucide="heart-handshake" class="w-6 h-6 md:w-7 md:h-7 text-[#2D2422]"></i>
+                        </div>
+                        <h3 class="text-xl md:text-2xl font-black" data-i18n="skill_3_title">角色与情感包装</h3>
+                    </div>
+                    <p class="text-[#5C4F4D] font-bold text-sm leading-relaxed flex-grow" data-i18n="skill_3_desc">
+                        赋予纸片人灵魂。撰写动人的角色羁绊、符合人设的生动台词，以及藏在道具描述里的碎片化温情故事。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 分割线 -->
+    <div class="relative w-full z-20">
+        <svg viewBox="0 0 1440 120" class="w-full h-auto text-[#FF6B6B] fill-current" preserveAspectRatio="none">
+            <path d="M0,32L80,42.7C160,53,320,75,480,74.7C640,75,800,53,960,42.7C1120,32,1280,32,1360,32L1440,32L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
+        </svg>
+    </div>
+
+    <!-- 作品展示区域 -->
+    <section id="works" class="max-w-6xl mx-auto px-4 md:px-6 py-12 md:py-16 relative z-10">
+        <div class="flex flex-col items-center mb-8 md:mb-12">
+            <h2 class="text-3xl md:text-5xl font-black tracking-tight mb-4" data-i18n="works_title">作品集书架</h2>
+        </div>
+        <!-- 折叠手风琴容器 -->
+        <div id="accordion-container" class="space-y-4 md:space-y-6 max-w-5xl mx-auto"></div>
+    </section>
+
+    <!-- 经典战役区域 -->
+    <section id="experience" class="max-w-6xl mx-auto px-4 md:px-6 py-12 md:py-16 relative z-10 border-t-4 border-dashed border-[#2D2422]/20 mt-4 md:mt-8">
+        <div class="flex flex-col items-center mb-8 md:mb-12">
+            <h2 class="text-3xl md:text-5xl font-black tracking-tight mb-4 inline-block relative">
+                <span data-i18n="exp_title">经典战役</span>
+                <div class="absolute -bottom-2 right-[-10px] md:right-[-20px] w-8 h-8 md:w-12 md:h-12 bg-[#FFD93D] rounded-full z-[-1] opacity-80"></div>
+                <i data-lucide="swords" class="absolute -top-4 -left-6 md:-top-6 md:-left-8 w-8 h-8 md:w-10 md:h-10 text-[#FF6B6B] transform -rotate-12"></i>
+            </h2>
+        </div>
+        <!-- 项目经历折叠容器 -->
+        <div id="experience-accordion-container" class="space-y-4 md:space-y-6 max-w-5xl mx-auto"></div>
+    </section>
+
+    <!-- 底部联系区域 -->
+    <footer id="contact" class="bg-[#FFD93D] border-t-4 border-[#2D2422] py-16 md:py-20 relative z-20 mt-10">
+        <div class="max-w-4xl mx-auto px-6 flex flex-col items-center text-center">
+            <div class="inline-block bg-white text-[#2D2422] border-4 border-[#2D2422] rounded-full font-bold px-4 py-2 mb-6 shadow-[4px_4px_0px_0px_#2D2422] transform -rotate-2">
+                <span class="text-base md:text-xl" data-i18n="contact_badge">✨ Let's make something fun!</span>
+            </div>
+            <h2 class="text-3xl md:text-5xl font-black mb-6 tracking-tight" data-i18n="contact_title">组队冒险请求？</h2>
+            <p class="text-[#5C4F4D] font-bold max-w-xl mb-12 mx-auto text-base md:text-lg" data-i18n="contact_desc">
+                不管是天马行空的独立小品，还是大制作的沉浸世界，只要有动人的点子，羽毛笔随时准备好出发。
+            </p>
+            
+            <div class="flex flex-wrap justify-center gap-x-6 gap-y-6 font-black text-base md:text-xl w-full">
+                <a href="mailto:remonet.rua@gmail.com" class="flex items-center hover:text-[#FF6B6B] transition-colors w-full sm:w-auto justify-center">
+                    <div class="bg-white p-2 rounded-full border-2 border-[#2D2422] mr-3 shrink-0"><i data-lucide="mail" class="w-5 h-5"></i></div>
+                    <span class="break-all">remonet.rua@gmail.com</span>
+                </a>
+                <div class="flex items-center w-full sm:w-auto justify-center">
+                    <div class="bg-white p-2 rounded-full border-2 border-[#2D2422] mr-3 shrink-0"><i data-lucide="smartphone" class="w-5 h-5"></i></div>
+                    信号漫游中~
+                </div>
+                <div class="flex items-center w-full sm:w-auto justify-center">
+                    <div class="bg-white p-2 rounded-full border-2 border-[#2D2422] mr-3 shrink-0"><i data-lucide="message-circle" class="w-5 h-5"></i></div>
+                    WeChat: 信号漫游中~
+                </div>
+                <div class="flex items-center w-full sm:w-auto justify-center">
+                    <div class="bg-white p-2 rounded-full border-2 border-[#2D2422] mr-3 shrink-0"><i data-lucide="message-square" class="w-5 h-5"></i></div>
+                    QQ: 914751695
+                </div>
+                <a href="https://space.bilibili.com/399243459" target="_blank" class="flex items-center hover:text-[#FF6B6B] transition-colors w-full sm:w-auto justify-center">
+                    <div class="bg-white p-2 rounded-full border-2 border-[#2D2422] mr-3 shrink-0"><i data-lucide="tv" class="w-5 h-5"></i></div>
+                    B站: 莫奈ReMonet
+                </a>
+            </div>
+        </div>
+        
+        <div class="max-w-6xl mx-auto px-6 mt-16 md:mt-20 pt-8 border-t-4 border-[#2D2422]/20 text-center text-xs md:text-sm font-bold text-[#5C4F4D] flex flex-col md:flex-row justify-between items-center gap-4">
+            <p>Version 0.4 | © <span id="current-year"></span> <span data-i18n="footer_rights">莫奈ReMonet. 充满爱与脑洞的版权所有.</span></p>
+            <p class="flex items-center">Made with <i data-lucide="heart" class="w-4 h-4 mx-1 text-[#FF6B6B] fill-[#FF6B6B]"></i> and lots of coffee.</p>
+        </div>
+    </footer>
+
+    <!-- 背景音乐 Audio 标签 -->
+    <audio id="bgm" loop preload="auto">
+        <!-- 将你下载的音乐文件重命名为 bgm.mp3，并和 index.html 放在同一个文件夹下即可 -->
+        <source src="bgm.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- 音乐控制按钮 (悬浮左下角) -->
+    <button id="bgm-toggle" onclick="toggleBGM()" class="fixed bottom-6 left-6 md:bottom-8 md:left-8 z-50 bg-[#38E54D] text-[#2D2422] p-3 rounded-full border-4 border-[#2D2422] shadow-[4px_4px_0px_0px_#2D2422] hover:bg-[#4ade80] hover:-translate-y-2 transition-all duration-300 opacity-60 hover:opacity-100" title="播放/暂停背景音乐">
+        <i data-lucide="music" id="bgm-icon" class="w-5 h-5 md:w-6 md:h-6 transition-transform duration-300"></i>
+    </button>
+
+    <!-- 返回顶部按钮 -->
+    <button id="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-50 bg-[#FFD93D] text-[#2D2422] p-3 rounded-full border-4 border-[#2D2422] shadow-[4px_4px_0px_0px_#2D2422] hover:bg-[#FFE169] hover:-translate-y-2 transition-all duration-300 opacity-0-invisible">
+        <i data-lucide="arrow-up" class="w-5 h-5 md:w-6 md:h-6"></i>
+    </button>
+
+    <!-- 文本阅读弹窗 -->
+    <div id="read-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 bg-[#2D2422]/80 backdrop-blur-sm transition-opacity">
+        <div class="pop-box bg-[#FFF9F0] w-full max-w-4xl max-h-[95vh] flex flex-col relative transform scale-95 opacity-0 transition-all duration-300" id="read-modal-content">
+            <!-- 关闭按钮 -->
+            <button onclick="closeModal()" class="absolute -top-3 -right-3 md:-top-6 md:-right-6 bg-[#FF6B6B] text-white p-2 md:p-3 rounded-full border-4 border-[#2D2422] shadow-[4px_4px_0px_0px_#2D2422] hover:bg-[#ff4f4f] hover:scale-110 transition-transform z-20 cursor-pointer">
+                <i data-lucide="x" class="w-5 h-5 md:w-6 md:h-6"></i>
+            </button>
+            
+            <!-- 头部信息 -->
+            <div class="p-5 md:p-8 border-b-4 border-[#2D2422] bg-white rounded-t-[1.5rem] shrink-0 relative">
+                <div class="flex flex-col-reverse md:flex-row justify-between items-start md:items-center mb-4 gap-4 pr-8 md:pr-0">
+                    <div class="flex flex-wrap gap-2" id="modal-tags"></div>
+                    <div class="flex items-center gap-3 bg-[#FFF9F0] border-2 border-[#2D2422] rounded-full px-3 py-1 shadow-[2px_2px_0px_0px_#2D2422] ml-auto md:ml-0 md:mr-10">
+                        <button onclick="changeFontSize(-1)" class="hover:text-[#FF6B6B] transition-colors font-black text-sm">A-</button>
+                        <div class="w-px h-4 bg-[#2D2422]/20"></div>
+                        <button onclick="changeFontSize(1)" class="hover:text-[#FF6B6B] transition-colors font-black text-lg">A+</button>
+                    </div>
+                </div>
+                <h2 id="modal-title" class="text-2xl md:text-4xl font-black text-[#2D2422] leading-tight pr-6 md:pr-8"></h2>
+            </div>
+            
+            <!-- 沉浸式阅读进度条 -->
+            <div class="w-full h-1.5 bg-gray-200 shrink-0 border-b-4 border-[#2D2422]">
+                <div id="reading-progress" class="h-full bg-[#38E54D] w-0 transition-all duration-150"></div>
+            </div>
+
+            <!-- 正文区域 -->
+            <div id="scrollable-content" class="p-5 md:p-10 overflow-y-auto hide-scrollbar bg-[#FFF9F0] rounded-b-[1.5rem] grow" onscroll="updateReadingProgress()">
+                <div id="modal-body" class="max-w-none text-[#5C4F4D] font-bold leading-relaxed space-y-6 whitespace-pre-wrap transition-all duration-300" style="font-size: 16px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全屏沉浸式次级页面 -->
+    <div id="secondary-page" class="hidden opacity-0 pointer-events-none fixed inset-0 z-[200] bg-[#FFF9F0] overflow-y-auto w-full h-full transition-opacity duration-300">
+        <div class="sticky top-0 z-50 bg-[#FFF9F0]/90 backdrop-blur-md border-b-4 border-[#2D2422] px-4 md:px-6 py-3 md:py-4 flex justify-between items-center">
+            <button onclick="closeSecondaryPage()" class="pop-btn bg-white px-3 md:px-4 py-2 flex items-center gap-1 md:gap-2 font-black hover:bg-gray-100 transition-colors text-xs md:text-sm">
+                <i data-lucide="arrow-left" class="w-4 h-4 md:w-5 md:h-5"></i> 返回
+            </button>
+            <span class="font-black text-base md:text-xl tracking-wider">ReMonet Archive</span>
+            <div class="w-20 md:w-24"></div> <!-- 占位符以居中标题 -->
+        </div>
+        <div id="secondary-page-content" class="w-full pb-20"></div>
+    </div>
+
+    <!-- 数据与交互逻辑 -->
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        const i18n = {
+            zh: {
+                nav_about: "技能调色盘", nav_works: "作品集书架", nav_exp: "经典战役", nav_contact: "组队邀请",
+                status_text: "Status: 羽毛笔自动寻路中o_0",
+                hero_title_1: "为虚拟世界注入<br class='hidden sm:block'/>", hero_title_2: "“灵魂”与“温度”",
+                hero_desc: "Hi！这里是莫奈ReMonet，一名热爱讲故事的 <span class='text-[#FF6B6B]'>游戏文案/叙事策划/编剧</span>。<br>我坚信最棒的叙事不是生硬的说教，而是让玩家在笑容与泪水中，与角色产生跨越次元的共鸣。擅长世界观架构、网状叙事及有血有肉的角色塑造。",
+                btn_works: "翻阅书架", btn_contact: "隔空交流的魔法",
+                about_title: "技能调色盘", skill_1_title: "世界观架构", skill_1_desc: "绘制世界的蓝图。从创世神话到市井烟火，搭建逻辑自洽且充满奇观的底层世界观，为美术和关卡提供源源不断的灵感基石。",
+                skill_2_title: "网状分支叙事", skill_2_desc: "每一个选择都有分量。熟练设计复杂的任务网结构与多结局走向，追求在主线演出与支线探索中平衡剧情的情感张力。",
+                skill_3_title: "角色与情感包装", skill_3_desc: "赋予纸片人灵魂。撰写动人的角色羁绊、符合人设的生动台词，以及藏在道具描述里的碎片化温情故事。",
+                works_title: "作品集书架", exp_title: "经典战役",
+                contact_badge: "✨ Let's make something fun!", contact_title: "组队冒险请求？", contact_desc: "不管是天马行空的独立小品，还是大制作的沉浸世界，只要有动人的点子，羽毛笔随时准备好出发。",
+                footer_rights: "莫奈ReMonet. 充满爱与脑洞的版权所有."
+            },
+            en: {
+                nav_about: "Skill Palette", nav_works: "Portfolio Bookshelf", nav_exp: "Classic Campaigns", nav_contact: "Party Invite",
+                status_text: "Status: Auto-pathing with a quill o_0",
+                hero_title_1: "Injecting virtual worlds with<br class='hidden sm:block'/>", hero_title_2: '"Soul" and "Warmth"',
+                hero_desc: "Hi! I'm ReMonet, a passionate <span class='text-[#FF6B6B]'>Game Writer / Narrative Designer</span>.<br>I believe the best narrative isn't stiff preaching, but letting players resonate across dimensions through tears and laughter. Specializing in world-building, branching narratives, and flesh-and-blood character creation.",
+                btn_works: "Browse Shelf", btn_contact: "Message Spell",
+                about_title: "Skill Palette", skill_1_title: "World Building", skill_1_desc: "Drawing the blueprint of worlds. From genesis myths to bustling streets, building self-consistent and wondrous lore to inspire art and level design.",
+                skill_2_title: "Branching Narrative", skill_2_desc: "Making every choice weigh. Proficient in designing complex quest webs and multi-ending structures, balancing emotional tension in both main plots and side explorations.",
+                skill_3_title: "Character Design", skill_3_desc: "Giving souls to paper. Writing touching character bonds, vivid dialogue that fits personas, and fragmented warm stories hidden in Flavor Text.",
+                works_title: "Portfolio Bookshelf", exp_title: "Classic Campaigns",
+                contact_badge: "✨ Let's make something fun!", contact_title: "Looking for a Party?", contact_desc: "Whether it's an imaginative indie short or a massive immersive world, as long as there's a touching idea, my pen is ready to depart.",
+                footer_rights: "ReMonet. All rights reserved with love and imagination."
+            },
+            ja: {
+                nav_about: "スキルパレット", nav_works: "本棚（作品集）", nav_exp: "プロジェクト履歴", nav_contact: "パーティ募集",
+                status_text: "Status: 羽ペンが自動ルート検索中 o_0",
+                hero_title_1: "仮想世界に注入する<br class='hidden sm:block'/>", hero_title_2: "「魂」と「温もり」",
+                hero_desc: "こんにちは！物語を愛する<span class='text-[#FF6B6B]'>ゲームシナリオライター / ナラティブデザイナー</span>、モネ(ReMonet)です。<br>最高の物語とは説教ではなく、笑いと涙の中で次元を超えた共感を生むことだと信じています。世界観の構築、分岐シナリオ、血の通ったキャラクター造形が得意です。",
+                btn_works: "本棚を閲覧", btn_contact: "魔法で通信する",
+                about_title: "スキルパレット", skill_1_title: "世界観の構築", skill_1_desc: "世界の青写真を描く。創世神話から市井の息遣いまで、論理的で驚きに満ちた基盤となる世界観を構築し、アートやレベルデザインにインスピレーションを提供します。",
+                skill_2_title: "分岐シナリオ", skill_2_desc: "プレイヤーの選択に重みを持たせる。複雑なクエスト網やマルチエンディングの設計に精通し、メインストーリーと探索の感情的な緊張感を整えます。",
+                skill_3_title: "キャラクター造形", skill_3_desc: "紙の上の彼らに魂を。感動的なキャラクターの絆、設定に忠実な生き生きとしたセリフ、そしてフレーバーテキストに隠された温かい物語を執筆します。",
+                works_title: "本棚（作品集）", exp_title: "プロジェクト履歴",
+                contact_badge: "✨ Let's make something fun!", contact_title: "パーティへの招待？", contact_desc: "奇想天外なインディーゲームでも、大規模な没入型世界でも、心を打つアイデアがある限り、私のペンはいつでも出発する準備ができています。",
+                footer_rights: "モネReMonet. 愛と想像力に基づく無断転載を禁じます。"
+            }
+        };
+
+        function setLanguage(lang) {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18n[lang] && i18n[lang][key]) el.innerHTML = i18n[lang][key];
+            });
+            const btnIds = ['lang-btn-zh', 'lang-btn-en', 'lang-btn-ja'];
+            btnIds.forEach(id => {
+                const btn = document.getElementById(id);
+                if (id === `lang-btn-${lang}`) {
+                    btn.classList.add('bg-[#FF6B6B]', 'text-white');
+                    btn.classList.remove('bg-white', 'text-[#2D2422]', 'hover:bg-gray-100');
+                } else {
+                    btn.classList.remove('bg-[#FF6B6B]', 'text-white');
+                    btn.classList.add('bg-white', 'text-[#2D2422]', 'hover:bg-gray-100');
+                }
+            });
+        }
+
+        // 修改：对调了“同人发电站”和“灵感暂存处”的顺序
+        const categories = ['全部', '世界观设计', '奇想策划案', '短篇拾遗点', '同人发电站', '灵感暂存处'];
+        const portfolioItems = [
+            { id: 1, title: "《血樱扶桑》总体世界观", category: "世界观设计", description: "一片诞生之初就被鲜血与阴谋浸透的土地，一部大地与苍穹、自由与秩序抗争的千年秘史", tags: ["和风", "奇幻", "世界观"], imageUrl: "tinosakura.png", color: "#4D96FF", fullText: `<p><strong>【世界观简述】</strong></p><p>大和国，一片自诞生之初便被鲜血与阴谋浸透的土地。<p>云端之上，所谓的天津神明为独占地脉的伟力，勾心斗角，互相征伐，致使天界崩毁。焦土之下，生灵的绝望与大地深处的脉动交织，孕育出了反叛的族裔——国津神族。<p>千年厮杀，高天原化为废墟。贪婪的天津神族，终将傲慢的目光投向了凡人的苇原中国。<p>史书粉饰太平，称其为“让国事件”。其所不载的，则是一场血流成河的惨案。国津神族无力回天，或被抽干力量封印于坚石之下，或戴上残破的面具蛰伏于黑夜。大和的大地，就此被冰冷的天命与秩序接管。<p>然而，只要大地的血管仍在搏动，反抗便不会停息。为了斩断饮血的天命，不甘被奴役者、残存的反抗者，尚有良知的背叛者，为了求生与反抗相继涌现。<p>一场大地与苍穹、自由与秩序的千年斗争，就此拉开帷幕。</p><div class="mt-8 p-4 md:p-6 bg-[#FFF9F0] border-4 border-[#2D2422] rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 shadow-[4px_4px_0px_0px_#2D2422]"><div class="flex items-center gap-3"><i data-lucide="link" class="w-6 h-6 text-[#FF6B6B]"></i><span class="font-black text-[#2D2422] text-lg">完整世界观设定企划书</span></div><a href="https://re-daisho.notion.site/320a4f84a2bb8020bdd0f136bbbd32ec?source=copy_link" target="_blank" class="pop-btn bg-[#FF6B6B] text-white px-6 py-2.5 text-sm flex items-center gap-2 hover:bg-[#ff4f4f] w-full md:w-auto justify-center"><i data-lucide="external-link" class="w-4 h-4"></i> 点击前往外部链接阅读</a></div>` },
+            
+            // 修改：将都市怪谈改为《大正米物语》，采用外链跳转
+            { id: 2, title: "《大正米物语》策划案", category: "奇想策划案", description: "百年前的米骚动，是否可以有另一种走向……", tags: ["大正", "RPG", "剧情向策划"], imageUrl: "daisyokata.png", color: "#FFD93D", externalLink: "https://re-daisho.notion.site/2fea4f84a2bb80db827fd7a2d43add0c?source=copy_link" },
+            
+            // 新增：《赞岐物语》项目，同样采用外链跳转
+            { id: 9, title: "《赞岐物语》策划案", category: "奇想策划案", description: "权术算计之下，谁是棋子，谁又是执棋者？", tags: ["和风", "类银河恶魔城", "剧情向策划"], imageUrl: "sanuki.png", color: "#FFD93D", externalLink: "https://re-daisho.notion.site/31ba4f84a2bb80bc91a1caa88c2e7023?source=copy_link" },
+            
+            // 修改：将《星之子》重置为一个包含三个分页的短篇展示次级页面
+            { id: 3, title: "谢幕师", category: "短篇拾遗点", description: "身穿风衣的男人缓步走着，看着眼前拼命奔逃的猎物。“该谢幕了，先生”——枪声之后是寂静，却没有任何导演喊停。", tags: ["近未来", "赛博朋克"], imageUrl: "Ender.png", color: "#FF6B6B", isSecondaryPage: true, templateId: "short-story-template-multi-tab" },
+            
+            { id: 4, title: "城市精神病", category: "灵感暂存处", description: "科技巨头发明了能够彻底消除心理疾病的设备，然而精神病真的消失了吗？还是人人都是精神病呢？", tags: ["赛博朋克", "科幻", "AVG"], imageUrl: "hysteria.jpg", color: "#38E54D",templateId:"mental-illness-story" },
+            
+            // 圣饭大冒险页面
+            { id: 5, title: "《“圣”饭大冒险》", category: "奇想策划案", description: "这是一段关于被遗忘在角落的sheng饭的故事…………", tags: ["平台跳跃", "可爱", "无厘头"], imageUrl: "Oni-0.png", color: "#FFD93D", isSecondaryPage: true, templateId: "project-template-multi-tab" },
+            
+            // 短篇拾遗点
+            { id: 6, title: "伊莉丝-好感剧情", category: "短篇拾遗点", description: "研究所成员间的日常互动剧情（来自一版废案）", tags: ["恋爱", "温馨", "日常"], imageUrl: "Cookie.png", color: "#FF6B6B",templateId:"love-story" },
+            
+            { id: 7, title: "漂浮的泡泡总要落地 - 遥-干员密录", category: "同人发电站", description: "总有人要站出来，也许昨天是他，明天是你。所以此时此刻站在这里的是也只能是紫野遥，而非羽生萌萌香。", tags: ["明日方舟", "遥", "日常向", "干员密录"], imageUrl: "https://media.prts.wiki/d/d1/%E7%AB%8B%E7%BB%98_%E9%81%A5_2.png", color: "#9D4EDD", templateId: "story-content-7" },
+            { id: 8, title: "艾格蕾特-自设干员档案", category: "同人发电站", description: "谁懂萨科塔队缺个医疗的痛TAT", tags: ["明日方舟", "干员档案", "拉特兰"], imageUrl: "https://media.prts.wiki/c/c5/Avg_bg_26_g9_laterano_street.png", color: "#4D96FF", isSecondaryPage: true, templateId: "arknights-profile-aigrette" },
+        
+            { id: 10, title: "《赞岐物语》世界观设定", category: "世界观设计", description: "在远离权力中心的土地，一场神明、妖魔、人类都卷入其中的动乱正在上演……", tags: ["和风", "奇幻", "世界观"], imageUrl: "sanuki.png", color: "#4D96FF", fullText: `<p><strong>【世界观简述】</strong></p><p>大和正逐渐由神的时代向人的时代演进。皇座背后是高天原的阴谋，还是紫藤花的野望？在远离权力中心的土地，一场神明、妖魔、人类都卷入其中的动乱正在上演……</p><div class="mt-8 p-4 md:p-6 bg-[#FFF9F0] border-4 border-[#2D2422] rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 shadow-[4px_4px_0px_0px_#2D2422]"><div class="flex items-center gap-3"><i data-lucide="link" class="w-6 h-6 text-[#FF6B6B]"></i><span class="font-black text-[#2D2422] text-lg">完整世界观设定企划书</span></div><a href="https://re-daisho.notion.site/c2f5f4fe561a4ea28e52cc239208892d?source=copy_link" target="_blank" class="pop-btn bg-[#FF6B6B] text-white px-6 py-2.5 text-sm flex items-center gap-2 hover:bg-[#ff4f4f] w-full md:w-auto justify-center"><i data-lucide="external-link" class="w-4 h-4"></i> 点击前往外部链接阅读</a></div>` }
+
+        ];
+
+        function getColorfulTag(tag) {
+            const colors = ['bg-[#FF6B6B]', 'bg-[#FFD93D]', 'bg-[#4D96FF]', 'bg-[#38E54D]', 'bg-[#FF9F43]', 'bg-[#9D4EDD]'];
+            const charSum = tag.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
+            const colorClass = colors[charSum % colors.length];
+            const textClass = (colorClass === 'bg-[#FFD93D]') ? 'text-[#2D2422]' : 'text-white';
+            return `<span class="text-xs font-bold ${colorClass} ${textClass} border-2 border-[#2D2422] px-3 py-1 rounded-full shadow-[2px_2px_0px_0px_#2D2422]">#${tag}</span>`;
+        }
+
+        // 修改：更新颜色映射字典中的名称
+        const categoryColors = { '世界观设计': '#4D96FF', '奇想策划案': '#FFD93D', '短篇拾遗点': '#FF6B6B', '灵感暂存处': '#38E54D', '同人发电站': '#9D4EDD' };
+
+        const experienceItems = [{
+            id: 'exp-1', title: "《叛逆神魂GODSOUL》", tag: "独立游戏/角色扮演/卡牌战斗", period: "2025.01 - 2025.05",
+            role: "日语本地化/日语配音协力", roleIcon: "flag", desc: "负责对已经完成的主线剧情和教程部分进行日语本地化（翻译＋润色）；同时对接数位日语配音老师进行配音跟进，确保配音质量；承担部分配音剪辑工作。",
+            highlights: ["Steam", "特别好评"], bgIcon: "globe", bgColor: "#FF6B6B", textColor: "white",
+            imageUrls: [
+                "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1213300/header_schinese.jpg?t=1772704250",
+                "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1213300/ss_ece53fff00a70de08616778b0f27de4927e1b250.1920x1080.jpg?t=1772704250",
+                "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1213300/ss_073b87109c941af0f17632c3a51fc7bde6c81fd0.1920x1080.jpg?t=1772704250",
+                "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1213300/ss_bc6d08e0ad424a5ba2859d683e3902d7537399e9.1920x1080.jpg?t=1772704250",
+                "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1213300/ss_58eae49f2320972bbcb7e550de6d9bba46883a22.1920x1080.jpg?t=1772704250"
+            ],
+            steamLink: "https://store.steampowered.com/app/1213300/GODSOUL/"
+        }];
+
+        function toggleAccordion(id) {
+            const content = document.getElementById(`content-${id}`);
+            const icon = document.getElementById(`icon-${id}`);
+            // 修复：使用类名标记状态，更为精准
+            const isCurrentlyOpen = content.classList.contains('is-open');
+            const prefix = id.split('-')[0]; 
+            const allContents = document.querySelectorAll(`[id^="content-${prefix}-"]`);
+            const allIcons = document.querySelectorAll(`[id^="icon-${prefix}-"]`);
+
+            // 遍历所有同级面板，关闭已经打开的
+            allContents.forEach(c => {
+                if (c.classList.contains('is-open')) {
+                    c.classList.remove('is-open');
+                    // 闭合时先将高度固定为当前的真实高度，然后强制重绘，再设为0触发闭合动画
+                    c.style.maxHeight = c.scrollHeight + 'px';
+                    void c.offsetHeight; // 强制浏览器重绘
+                    c.style.maxHeight = '0px';
+                    c.classList.remove('border-[#2D2422]');
+                    c.classList.add('border-transparent');
+                }
+            });
+            allIcons.forEach(i => i.style.transform = 'rotate(0deg)');
+
+            if (!isCurrentlyOpen) {
+                content.classList.add('is-open');
+                // 展开时：赋予一个超大的安全高度以触发动画，不用担心内容没加载完算错高度
+                content.style.maxHeight = '3000px'; 
+                icon.style.transform = 'rotate(-180deg)';
+                content.classList.remove('border-transparent');
+                content.classList.add('border-[#2D2422]');
+                
+                // 动画结束后，彻底解除高度限制，保证怎么加载图片或缩放都不会被裁断
+                setTimeout(() => {
+                    if (content.classList.contains('is-open')) {
+                        content.style.maxHeight = 'none';
+                    }
+                }, 500); // 时间对应 CSS 中的 duration-500
+            }
+        }
+
+        function renderAccordions() {
+            const container = document.getElementById('accordion-container');
+            const cats = categories.filter(c => c !== '全部');
+            container.innerHTML = cats.map((category, index) => {
+                const items = portfolioItems.filter(item => item.category === category);
+                if (items.length === 0) return ''; 
+                const bgColor = categoryColors[category] || '#FF9F43';
+                const textColor = bgColor === '#FFD93D' ? '#2D2422' : 'white';
+                const id = `cat-${index}`;
+                const cardsHtml = items.map(item => `
+                    <div onclick="openWorkModal(${item.id})" class="pop-box group flex flex-col relative overflow-hidden shrink-0 w-[260px] md:w-[320px] snap-center bg-[#FFF9F0] h-full cursor-pointer hover:!translate-y-[-8px]">
+                        <div class="relative overflow-hidden aspect-[4/3] border-b-4 border-[#2D2422] bg-white rounded-t-[1.5rem]">
+                            <img src="${item.imageUrl}" alt="${item.title}" loading="lazy" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                        </div>
+                        <div class="p-5 md:p-6 flex flex-col flex-grow bg-white rounded-b-[1.5rem]">
+                            <h3 class="text-lg md:text-xl font-black mb-3 text-[#2D2422] leading-tight group-hover:text-[#FF6B6B] transition-colors">${item.title}</h3>
+                            <p class="text-[#5C4F4D] font-bold text-xs md:text-sm mb-6 line-clamp-3 leading-relaxed flex-grow">${item.description}</p>
+                            <div class="flex flex-wrap gap-2 mt-auto">${item.tags.map(tag => getColorfulTag(tag)).join('')}</div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="accordion-item relative">
+                        <button onclick="toggleAccordion('${id}')" class="w-full pop-box flex flex-wrap justify-between items-center px-5 md:px-8 py-4 md:py-5 cursor-pointer hover:-translate-y-2 transition-transform z-10 relative gap-3" style="background-color: ${bgColor}; color: ${textColor};">
+                            <h3 class="text-xl md:text-2xl font-black tracking-wide flex flex-wrap items-center gap-2">
+                                ${category} <span class="text-xs md:text-sm font-bold bg-white text-[#2D2422] border-4 border-[#2D2422] rounded-full px-2 md:px-3 py-0.5 shadow-[2px_2px_0px_0px_#2D2422]">${items.length} 篇</span>
+                            </h3>
+                            <div class="bg-white p-1.5 md:p-2 rounded-full border-4 border-[#2D2422] text-[#2D2422] shadow-[2px_2px_0px_0px_#2D2422] shrink-0">
+                                <i data-lucide="chevron-down" id="icon-${id}" class="w-5 h-5 md:w-6 md:h-6 transform transition-transform duration-300"></i>
+                            </div>
+                        </button>
+                        <div id="content-${id}" class="overflow-hidden transition-all duration-500 max-h-0 bg-[#FFF9F0]/80 rounded-b-3xl border-x-4 border-b-4 border-transparent -mt-8 pt-8">
+                            <!-- 修复：换用 custom-scrollbar 并加入 drag-scroll，同时底部留出更多空间防止滚动条遮挡阴影 -->
+                            <div class="flex gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory custom-scrollbar drag-scroll pt-6 pb-10 md:pt-8 md:pb-12 px-4 md:px-8 items-stretch">
+                                ${cardsHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // 绑定抓取滑动事件
+            enableDragScroll();
+        }
+
+        function renderExperienceAccordions() {
+            const container = document.getElementById('experience-accordion-container');
+            container.innerHTML = experienceItems.map(item => {
+                return `
+                    <div class="accordion-item relative group">
+                        <button onclick="toggleAccordion('${item.id}')" class="w-full pop-box flex flex-col md:flex-row justify-between items-start md:items-center px-5 md:px-8 py-4 md:py-5 cursor-pointer hover:-translate-y-2 transition-transform z-10 relative gap-3 md:gap-4" style="background-color: ${item.bgColor}; color: ${item.textColor};">
+                            <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-3 items-start w-full md:w-auto">
+                                <h3 class="text-lg md:text-2xl font-black tracking-wide text-left break-words">${item.title}</h3>
+                                <span class="text-xs font-bold bg-[#FFF9F0] text-[#2D2422] px-2 py-1 rounded-full border-2 border-[#2D2422] shadow-[2px_2px_0px_0px_#2D2422] transform md:rotate-2 shrink-0">${item.tag}</span>
+                            </div>
+                            <div class="flex items-center justify-between w-full md:w-auto gap-3 md:gap-4 mt-2 md:mt-0 shrink-0">
+                                <span class="font-black text-xs md:text-base bg-white/20 px-2 md:px-3 py-1 rounded-xl border border-white/50">${item.period}</span>
+                                <div class="bg-white p-1.5 md:p-2 rounded-full border-4 border-[#2D2422] text-[#2D2422] shadow-[2px_2px_0px_0px_#2D2422] shrink-0">
+                                    <i data-lucide="chevron-down" id="icon-${item.id}" class="w-5 h-5 md:w-6 md:h-6 transform transition-transform duration-300"></i>
+                                </div>
+                            </div>
+                        </button>
+                        <div id="content-${item.id}" class="overflow-hidden transition-all duration-500 max-h-0 bg-[#FFF9F0]/80 rounded-b-3xl border-x-4 border-b-4 border-transparent -mt-8 pt-8">
+                            <div class="p-5 md:p-8 relative">
+                                <h4 class="text-base md:text-lg font-bold mb-4 flex items-center gap-2" style="color: ${item.bgColor};"><i data-lucide="${item.roleIcon}" class="w-4 h-4 md:w-5 md:h-5"></i> ${item.role}</h4>
+                                ${item.imageUrls && item.imageUrls.length > 0 ? `
+                                    ${item.imageUrls.length > 1 ? `
+                                        <div class="mb-6 relative z-10 border-4 border-[#2D2422] rounded-xl overflow-hidden shadow-[4px_4px_0px_0px_#2D2422] group/carousel bg-[#2D2422]">
+                                            <div class="flex animate-marquee group-hover/carousel:[animation-play-state:paused] w-max">
+                                                ${[...item.imageUrls, ...item.imageUrls].map((img, i) => `
+                                                    <div class="w-[260px] md:w-[400px] aspect-video shrink-0 border-r-4 border-[#2D2422]">
+                                                        <img src="${img}" alt="${item.title} 截图 ${i}" loading="lazy" class="w-full h-full object-cover" />
+                                                    </div>
+                                                `).join('')}
+                                            </div>
+                                            <div class="absolute top-2 left-2 md:top-3 md:left-3 bg-[#FFD93D] text-[#2D2422] text-[10px] md:text-xs font-black px-2 md:px-3 py-1 md:py-1.5 rounded-full border-2 border-[#2D2422] shadow-[2px_2px_0px_0px_#2D2422] pointer-events-none z-10 opacity-90">✨ 悬停或长按 暂停滚动</div>
+                                        </div>
+                                    ` : `<div class="mb-6 relative z-10 border-4 border-[#2D2422] rounded-xl overflow-hidden shadow-[4px_4px_0px_0px_#2D2422] aspect-video md:aspect-[21/9]"><img src="${item.imageUrls[0]}" loading="lazy" class="w-full h-full object-cover" /></div>`}
+                                ` : ''}
+                                <p class="text-[#5C4F4D] font-bold text-sm md:text-base leading-relaxed mb-6 relative z-10 text-justify">${item.desc}</p>
+                                <div class="flex flex-wrap gap-2 md:gap-3 relative z-10 mb-6">
+                                    ${item.highlights.map(hl => `<span class="text-[10px] md:text-xs font-bold bg-white border-2 border-[#2D2422] px-2 md:px-3 py-1 rounded-full text-[#2D2422] shadow-[2px_2px_0px_0px_#2D2422]">${hl}</span>`).join('')}
+                                </div>
+                                ${item.steamLink ? `
+                                <div class="relative z-10 inline-block">
+                                    <a href="${item.steamLink}" target="_blank" class="inline-flex items-center gap-2 pop-btn bg-[#FFD93D] text-[#2D2422] px-4 md:px-6 py-2 md:py-2.5 hover:bg-[#FFE169] text-xs md:text-sm cursor-pointer"><i data-lucide="gamepad-2" class="w-4 h-4 md:w-5 md:h-5"></i> 在 Steam 上查看</a>
+                                </div>` : ''}
+                                <i data-lucide="${item.bgIcon}" class="absolute right-4 bottom-4 w-24 h-24 md:w-32 md:h-32 opacity-[0.08] transform rotate-12 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6" style="color: ${item.bgColor};"></i>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // =====================
+        // 全局拖拽滚动功能
+        // =====================
+        function enableDragScroll() {
+            const sliders = document.querySelectorAll('.drag-scroll');
+            sliders.forEach(slider => {
+                if(slider.dataset.dragBound) return; // 防止重复绑定
+                slider.dataset.dragBound = "true";
+
+                let isDown = false;
+                let startX;
+                let scrollLeft;
+                let hasDragged = false;
+
+                slider.addEventListener('mousedown', (e) => {
+                    isDown = true;
+                    hasDragged = false;
+                    slider.classList.remove('snap-mandatory', 'snap-x'); // 拖拽时取消强制吸附，使过渡更丝滑
+                    startX = e.pageX - slider.offsetLeft;
+                    scrollLeft = slider.scrollLeft;
+                });
+                slider.addEventListener('mouseleave', () => {
+                    isDown = false;
+                    slider.classList.remove('is-dragging');
+                    slider.classList.add('snap-mandatory', 'snap-x');
+                });
+                slider.addEventListener('mouseup', () => {
+                    isDown = false;
+                    slider.classList.add('snap-mandatory', 'snap-x');
+                    setTimeout(() => { slider.classList.remove('is-dragging'); }, 0);
+                });
+                slider.addEventListener('mousemove', (e) => {
+                    if (!isDown) return;
+                    e.preventDefault();
+                    const x = e.pageX - slider.offsetLeft;
+                    const walk = (x - startX) * 1.5; // 滑动倍速
+                    
+                    // 当滑动距离超过一定像素时，才判定为“正在拖拽”，以防与点击事件冲突
+                    if (Math.abs(walk) > 5 && !hasDragged) {
+                        hasDragged = true;
+                        slider.classList.add('is-dragging');
+                    }
+                    
+                    if (hasDragged) {
+                        slider.scrollLeft = scrollLeft - walk;
+                    }
+                });
+            });
+        }
+
+        // =====================
+        // 次级页面多页签切换逻辑
+        // =====================
+        function switchTab(tabId) {
+            // 隐藏所有的详情内容区
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            
+            // 重置所有的页签按钮样式（变为灰色未选中状态）
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('bg-[#FFD93D]', 'z-10', 'opacity-100');
+                el.classList.add('bg-[#FFF9F0]', 'z-0', 'opacity-70');
+            });
+            
+            // 显示目标内容区
+            const targetContent = document.getElementById(tabId);
+            if(targetContent) {
+                targetContent.classList.remove('hidden');
+                targetContent.classList.add('block');
+            }
+            
+            // 高亮目标按钮
+            const targetBtn = document.getElementById('btn-' + tabId);
+            if(targetBtn) {
+                targetBtn.classList.remove('bg-[#FFF9F0]', 'z-0', 'opacity-70');
+                targetBtn.classList.add('bg-[#FFD93D]', 'z-10', 'opacity-100');
+            }
+        }
+
+        // =====================
+        // 背景音乐控制逻辑
+        // =====================
+        const bgm = document.getElementById('bgm');
+        const bgmToggle = document.getElementById('bgm-toggle');
+        let isMusicPlaying = false;
+
+        function toggleBGM() {
+            const bgmIcon = document.getElementById('bgm-icon');
+            
+            if (isMusicPlaying) {
+                bgm.pause();
+                if (bgmIcon) bgmIcon.classList.remove('animate-spin-slow');
+                if (bgmToggle) {
+                    bgmToggle.classList.add('opacity-60');
+                    bgmToggle.classList.remove('opacity-100');
+                }
+            } else {
+                bgm.play().then(() => {
+                    if (bgmIcon) bgmIcon.classList.add('animate-spin-slow');
+                    if (bgmToggle) {
+                        bgmToggle.classList.remove('opacity-60');
+                        bgmToggle.classList.add('opacity-100');
+                    }
+                }).catch(e => {
+                    console.log("音频播放失败 (可能由于浏览器限制策略):", e);
+                });
+            }
+            isMusicPlaying = !isMusicPlaying;
+        }
+
+        function init() {
+            renderAccordions(); renderExperienceAccordions(); lucide.createIcons();
+            setTimeout(() => {
+                const cats = categories.filter(c => c !== '全部');
+                if (cats.length > 0) toggleAccordion('cat-0');
+                if (experienceItems.length > 0) toggleAccordion(experienceItems[0].id);
+            }, 100);
+        }
+
+        let currentFontSize = 16;
+        function changeFontSize(step) {
+            currentFontSize += step * 2;
+            if (currentFontSize < 14) currentFontSize = 14;
+            if (currentFontSize > 32) currentFontSize = 32;
+            document.getElementById('modal-body').style.fontSize = currentFontSize + 'px';
+            setTimeout(updateReadingProgress, 300);
+        }
+
+        function updateReadingProgress() {
+            const container = document.getElementById('scrollable-content');
+            const progress = document.getElementById('reading-progress');
+            const scrollHeight = container.scrollHeight - container.clientHeight;
+            progress.style.width = scrollHeight <= 0 ? '100%' : ((container.scrollTop / scrollHeight) * 100) + '%';
+        }
+
+        function openWorkModal(id) {
+            const item = portfolioItems.find(i => i.id === id);
+            if (!item) return;
+            if (item.externalLink && !item.fullText && !item.templateId) { window.open(item.externalLink, '_blank'); return; }
+            if (item.isSecondaryPage && item.templateId) { openSecondaryPage(item.templateId); return; }
+
+            document.getElementById('modal-title').textContent = item.title;
+            document.getElementById('modal-tags').innerHTML = item.tags.map(tag => getColorfulTag(tag)).join('');
+            
+            let rawContent = item.fullText || (item.templateId && document.getElementById(item.templateId)?.innerHTML) || '';
+            document.getElementById('modal-body').innerHTML = rawContent || `<div class="text-center py-12 opacity-50"><i data-lucide="ghost" class="w-16 h-16 mx-auto mb-4"></i><p>文档正文还在异世界传输中，暂未上传...</p></div>`;
+            
+            currentFontSize = 16;
+            document.getElementById('modal-body').style.fontSize = currentFontSize + 'px';
+            document.getElementById('scrollable-content').scrollTop = 0;
+            setTimeout(updateReadingProgress, 50);
+
+            const modal = document.getElementById('read-modal'), modalContent = document.getElementById('read-modal-content');
+            modal.classList.remove('hidden'); void modal.offsetWidth;
+            modalContent.classList.remove('scale-95', 'opacity-0'); modalContent.classList.add('scale-100', 'opacity-100');
+            document.body.style.overflow = 'hidden'; lucide.createIcons();
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('read-modal'), modalContent = document.getElementById('read-modal-content');
+            modalContent.classList.remove('scale-100', 'opacity-100'); modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => { modal.classList.add('hidden'); document.body.style.overflow = ''; }, 300);
+        }
+
+        function closeSecondaryPage() {
+            const page = document.getElementById('secondary-page');
+            page.classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => { page.classList.add('hidden'); document.body.style.overflow = ''; }, 300);
+        }
+
+        function openSecondaryPage(templateId) {
+            const templateEl = document.getElementById(templateId);
+            if (!templateEl) return;
+            document.getElementById('secondary-page-content').innerHTML = templateEl.innerHTML;
+            const page = document.getElementById('secondary-page');
+            page.classList.remove('hidden'); void page.offsetWidth;
+            page.classList.remove('opacity-0', 'pointer-events-none');
+            document.body.style.overflow = 'hidden'; page.scrollTop = 0; lucide.createIcons();
+            
+            // 修复：确保次级页面的导航滑块也支持鼠标拖动
+            enableDragScroll();
+        }
+
+        window.addEventListener('scroll', () => {
+            const backToTopBtn = document.getElementById('back-to-top');
+            if (window.scrollY > 500) { backToTopBtn.classList.remove('opacity-0-invisible'); backToTopBtn.classList.add('opacity-100-visible'); } 
+            else { backToTopBtn.classList.remove('opacity-100-visible'); backToTopBtn.classList.add('opacity-0-invisible'); }
+        });
+
+        init();
+    </script>
+
+    <!-- ============================================================== -->
+    <!-- 长篇正文及次级页面模板库 -->
+    <!-- ============================================================== -->
+    
+    <!-- 圣饭大冒险 -->
+    <script type="text/template" id="project-template-multi-tab">
+        <div class="min-h-screen bg-[#FFF9F0] text-[#2D2422] font-sans p-4 md:p-8" style="background-image: radial-gradient(#2D2422 1px, transparent 1px); background-size: 20px 20px;">
+            <div class="max-w-5xl mx-auto flex flex-col gap-6 pt-4 pb-20">
+                
+                <!-- 头部标题区 -->
+                <div class="pop-box p-6 md:p-10 bg-white relative overflow-hidden">
+                    <i data-lucide="sparkles" class="absolute -right-4 -top-4 w-24 h-24 md:w-48 md:h-48 text-[#FFD93D] opacity-30 transform rotate-12"></i>
+                    <h1 class="text-3xl md:text-5xl font-black tracking-tight mb-4 relative z-10">“圣”饭大冒险</h1>
+                    <p class="text-[#5C4F4D] font-bold text-sm md:text-lg leading-relaxed relative z-10">
+                        这是一个关于被遗忘的SHENG饭的故事……<p>传说，只要饭团家族的勇士能够经过重重试炼，抵达最终的圣地……
+                    </p>
+                </div>
+
+                <!-- 导航页签区 -->
+                <div>
+                    <!-- 修复：为次级页面的多页签加入 drag-scroll 支持 -->
+                    <div class="flex space-x-2 md:space-x-4 border-b-4 border-[#2D2422] overflow-x-auto hide-scrollbar drag-scroll px-2 md:px-6 pt-2">
+                        <button onclick="switchTab('tab-worldview')" id="btn-tab-worldview" class="tab-btn px-4 md:px-6 py-3 font-black text-base md:text-lg bg-[#FFD93D] border-4 border-b-0 border-[#2D2422] rounded-t-2xl z-10 relative top-[4px] opacity-100 transition-all shrink-0 shadow-[0px_-2px_0px_0px_rgba(45,36,34,0.15)]">世界观</button>
+                        <button onclick="switchTab('tab-story')" id="btn-tab-story" class="tab-btn px-4 md:px-6 py-3 font-black text-base md:text-lg bg-[#FFF9F0] border-4 border-[#2D2422] border-b-0 rounded-t-2xl z-0 relative top-[4px] opacity-70 hover:opacity-100 hover:bg-[#FFE169] transition-all shrink-0">剧情/文案</button>
+                        <button onclick="switchTab('tab-gameplay')" id="btn-tab-gameplay" class="tab-btn px-4 md:px-6 py-3 font-black text-base md:text-lg bg-[#FFF9F0] border-4 border-[#2D2422] border-b-0 rounded-t-2xl z-0 relative top-[4px] opacity-70 hover:opacity-100 hover:bg-[#FFE169] transition-all shrink-0">玩法设计</button>
+                    </div>
+                    
+                    <!-- 详情内容区 -->
+                    <div class="pop-box bg-white p-6 md:p-10 border-t-0 rounded-tl-none md:rounded-tl-none rounded-tr-none md:rounded-tr-2xl rounded-b-2xl shadow-[8px_8px_0px_0px_rgba(45,36,34,0.15)]">
+                        
+                        <!-- 世界观分页 -->
+                        <div id="tab-worldview" class="tab-content block animate-fade-in">
+                            <h2 class="text-2xl font-black mb-6 flex items-center gap-2">
+                                <div class="w-3 h-3 bg-[#FFD93D] rounded-full border-2 border-[#2D2422]"></div> 世界观架构
+                            </h2>
+                            <div class="space-y-4 text-[#5C4F4D] font-bold leading-relaxed text-justify text-sm md:text-base">
+                                <p>在艰难的生存环境中，饭团家族世世代代听着长老的传说长大。传说，每一位勇敢的饭团，只要能通过重重试炼，就能到达传说中的饭团圣地，获得无与伦比的力量，从而拯救族群。<p>每年，饭团家族都会派出一位勇士。而今年，轮到了饭小白。<p>小白能通过重重阻碍，到达圣地，从而成为拯救家族的英雄吗？<p>小白怀着好奇和疑问，踏上了冒险……</p>
+                                
+                                <!-- 人物介绍模块 -->
+                                <h3 class="text-xl md:text-2xl font-black mt-10 mb-4 flex items-center gap-2 text-[#2D2422] border-b-4 border-[#2D2422] pb-2">
+                                    <i data-lucide="users" class="w-6 h-6 md:w-8 md:h-8 text-[#FF6B6B]"></i> 核心登场人物
+                                </h3>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+                                    
+                                    <!-- 人物卡片 1 -->
+                                    <div class="bg-[#FFF9F0] border-4 border-[#2D2422] rounded-xl overflow-hidden hover:-translate-y-2 transition-transform shadow-[4px_4px_0px_0px_#2D2422] flex flex-col">
+                                        <img src="Oni-1.png" alt="人物占位图" class="w-full aspect-square object-cover border-b-4 border-[#2D2422]">
+                                        <div class="p-4 flex flex-col grow">
+                                            <h4 class="font-black text-lg text-[#2D2422] mb-1">饭小白</h4>
+                                            <p class="text-xs text-[#FF6B6B] font-black mb-2 px-2 py-0.5 bg-white border-2 border-[#2D2422] rounded-full inline-block self-start shadow-[2px_2px_0px_0px_#2D2422]">饭团家族</p>
+                                            <p class="text-sm font-bold line-clamp-3 mt-1">饭团家族中最年轻的勇者，稚嫩的白米饭团。拥有善良的内心，但似乎总是信心不足？</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- 人物卡片 2 -->
+                                    <div class="bg-[#FFF9F0] border-4 border-[#2D2422] rounded-xl overflow-hidden hover:-translate-y-2 transition-transform shadow-[4px_4px_0px_0px_#2D2422] flex flex-col">
+                                        <img src="Oni-2.png" alt="人物占位图" class="w-full aspect-square object-cover border-b-4 border-[#2D2422]">
+                                        <div class="p-4 flex flex-col grow">
+                                            <h4 class="font-black text-lg text-[#2D2422] mb-1">饭团长老</h4>
+                                            <p class="text-xs text-[#FF6B6B] font-black mb-2 px-2 py-0.5 bg-white border-2 border-[#2D2422] rounded-full inline-block self-start shadow-[2px_2px_0px_0px_#2D2422]">饭团家族</p>
+                                            <p class="text-sm font-bold line-clamp-3 mt-1">饭团家族中最年长的饭团，德高望重。身上斑斑点点的“老饭斑”见证了岁月的痕迹。</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- 人物卡片 3 -->
+                                    <div class="bg-[#FFF9F0] border-4 border-[#2D2422] rounded-xl overflow-hidden hover:-translate-y-2 transition-transform shadow-[4px_4px_0px_0px_#2D2422] flex flex-col">
+                                        <img src="Oni-3.png" alt="人物占位图" class="w-full aspect-square object-cover border-b-4 border-[#2D2422]">
+                                        <div class="p-4 flex flex-col grow">
+                                            <h4 class="font-black text-lg text-[#2D2422] mb-1">饭木勇</h4>
+                                            <p class="text-xs text-[#FF6B6B] font-black mb-2 px-2 py-0.5 bg-white border-2 border-[#2D2422] rounded-full inline-block self-start shadow-[2px_2px_0px_0px_#2D2422]">饭团家族</p>
+                                            <p class="text-sm font-bold line-clamp-3 mt-1">不知道哪一届的饭团勇者，似乎在库房过得挺好？</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- 人物卡片 4 -->
+                                    <div class="bg-[#FFF9F0] border-4 border-[#2D2422] rounded-xl overflow-hidden hover:-translate-y-2 transition-transform shadow-[4px_4px_0px_0px_#2D2422] flex flex-col">
+                                        <img src="Oni-5.png" alt="人物占位图" class="w-full aspect-square object-cover border-b-4 border-[#2D2422]">
+                                        <div class="p-4 flex flex-col grow">
+                                            <h4 class="font-black text-lg text-[#2D2422] mb-1">饭吉诃德</h4>
+                                            <p class="text-xs text-[#FF6B6B] font-black mb-2 px-2 py-0.5 bg-white border-2 border-[#2D2422] rounded-full inline-block self-start shadow-[2px_2px_0px_0px_#2D2422]">饭团家族</p>
+                                            <p class="text-sm font-bold line-clamp-3 mt-1">对长老的传说深信不疑，但是其中似乎掺杂了自己的见解。饭团究竟是怎么找到并看懂骑士小说的？</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- 人物卡片 5 -->
+                                    <div class="bg-[#FFF9F0] border-4 border-[#2D2422] rounded-xl overflow-hidden hover:-translate-y-2 transition-transform shadow-[4px_4px_0px_0px_#2D2422] flex flex-col">
+                                        <img src="Oni-8.png" alt="人物占位图" class="w-full aspect-square object-cover border-b-4 border-[#2D2422]">
+                                        <div class="p-4 flex flex-col grow">
+                                            <h4 class="font-black text-lg text-[#2D2422] mb-1">饭喵</h4>
+                                            <p class="text-xs text-[#FF6B6B] font-black mb-2 px-2 py-0.5 bg-white border-2 border-[#2D2422] rounded-full inline-block self-start shadow-[2px_2px_0px_0px_#2D2422]">饭团家族</p>
+                                            <p class="text-sm font-bold line-clamp-3 mt-1">似乎和一只猫咪关系要好。在生鲜仓库乐此不疲地收集小鱼干。</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- 人物卡片 6 -->
+                                    <div class="bg-[#FFF9F0] border-4 border-[#2D2422] rounded-xl overflow-hidden hover:-translate-y-2 transition-transform shadow-[4px_4px_0px_0px_#2D2422] flex flex-col">
+                                        <img src="Oni-7.png" alt="人物占位图" class="w-full aspect-square object-cover border-b-4 border-[#2D2422]">
+                                        <div class="p-4 flex flex-col grow">
+                                            <h4 class="font-black text-lg text-[#2D2422] mb-1">饭悟</h4>
+                                            <p class="text-xs text-[#FF6B6B] font-black mb-2 px-2 py-0.5 bg-white border-2 border-[#2D2422] rounded-full inline-block self-start shadow-[2px_2px_0px_0px_#2D2422]">饭团家族</p>
+                                            <p class="text-sm font-bold line-clamp-3 mt-1">接受过高等教育的饭团营养师。“怎么全是碳水啊！不行不行，我得降低一下我的‘体碳率’！”</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- 人物卡片 7 -->
+                                    <div class="bg-[#FFF9F0] border-4 border-[#2D2422] rounded-xl overflow-hidden hover:-translate-y-2 transition-transform shadow-[4px_4px_0px_0px_#2D2422] flex flex-col">
+                                        <img src="Oni-6.png" alt="人物占位图" class="w-full aspect-square object-cover border-b-4 border-[#2D2422]">
+                                        <div class="p-4 flex flex-col grow">
+                                            <h4 class="font-black text-lg text-[#2D2422] mb-1">喵饭</h4>
+                                            <p class="text-xs text-[#FF6B6B] font-black mb-2 px-2 py-0.5 bg-white border-2 border-[#2D2422] rounded-full inline-block self-start shadow-[2px_2px_0px_0px_#2D2422]">喵喵喵？</p>
+                                            <p class="text-sm font-bold line-clamp-3 mt-1">饭喵的铁哥们，喜欢吃小鱼干。</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- 人物卡片 8 -->
+                                    <div class="bg-[#FFF9F0] border-4 border-[#2D2422] rounded-xl overflow-hidden hover:-translate-y-2 transition-transform shadow-[4px_4px_0px_0px_#2D2422] flex flex-col">
+                                        <img src="Oni-9.png" alt="人物占位图" class="w-full aspect-square object-cover border-b-4 border-[#2D2422]">
+                                        <div class="p-4 flex flex-col grow">
+                                            <h4 class="font-black text-lg text-[#2D2422] mb-1">“水霸王”</h4>
+                                            <p class="text-xs text-[#FF6B6B] font-black mb-2 px-2 py-0.5 bg-white border-2 border-[#2D2422] rounded-full inline-block self-start shadow-[2px_2px_0px_0px_#2D2422]">海鲜联盟</p>
+                                            <p class="text-sm font-bold line-clamp-3 mt-1">海洋家族的领头鱼，总会滔滔不绝地讲述自己年轻时和“恶魔”作战的经历。</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- 人物卡片 9 -->
+                                    <div class="bg-[#FFF9F0] border-4 border-[#2D2422] rounded-xl overflow-hidden hover:-translate-y-2 transition-transform shadow-[4px_4px_0px_0px_#2D2422] flex flex-col">
+                                        <img src="Oni-10.png" alt="人物占位图" class="w-full aspect-square object-cover border-b-4 border-[#2D2422]">
+                                        <div class="p-4 flex flex-col grow">
+                                            <h4 class="font-black text-lg text-[#2D2422] mb-1">刀不菜</h4>
+                                            <p class="text-xs text-[#FF6B6B] font-black mb-2 px-2 py-0.5 bg-white border-2 border-[#2D2422] rounded-full inline-block self-start shadow-[2px_2px_0px_0px_#2D2422]">反派/厨房恶魔</p>
+                                            <p class="text-sm font-bold line-clamp-3 mt-1">久经厨房的老菜刀，传说中圣地的守门人。眼里只有对厨艺登峰造极的渴望。</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- 场景介绍模块 -->
+                                <h3 class="text-xl md:text-2xl font-black mt-14 mb-4 flex items-center gap-2 text-[#2D2422] border-b-4 border-[#2D2422] pb-2">
+                                    <i data-lucide="map" class="w-6 h-6 md:w-8 md:h-8 text-[#4D96FF]"></i> 关键场景
+                                </h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    
+                                    <!-- 场景卡片 1 -->
+                                    <div class="bg-white border-4 border-[#2D2422] rounded-xl overflow-hidden hover:-translate-y-2 transition-transform shadow-[4px_4px_0px_0px_#2D2422] flex flex-col">
+                                        <img src="Oni-s1.png" alt="场景占位图" class="w-full aspect-video object-cover border-b-4 border-[#2D2422]">
+                                        <div class="p-5 flex flex-col grow">
+                                            <h4 class="font-black text-xl text-[#2D2422] mb-2">老库房</h4>
+                                            <p class="text-sm font-bold leading-relaxed">年久失修的老库房。储存着许多食材，但都已经落灰。从数量和规模上能看出曾经还在使用时的辉煌。</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- 场景卡片 2 -->
+                                    <div class="bg-white border-4 border-[#2D2422] rounded-xl overflow-hidden hover:-translate-y-2 transition-transform shadow-[4px_4px_0px_0px_#2D2422] flex flex-col">
+                                        <img src="Oni-s2.png" alt="场景占位图" class="w-full aspect-video object-cover border-b-4 border-[#2D2422]">
+                                        <div class="p-5 flex flex-col grow">
+                                            <h4 class="font-black text-xl text-[#2D2422] mb-2">旧冷库</h4>
+                                            <p class="text-sm font-bold leading-relaxed">食材大部分已被清空，只剩下老旧的制冷设备还在嗡嗡作响（谁也不知道电费单在上一任主人的破产中有多大贡献）。</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- 场景卡片 3 -->
+                                    <div class="bg-white border-4 border-[#2D2422] rounded-xl overflow-hidden hover:-translate-y-2 transition-transform shadow-[4px_4px_0px_0px_#2D2422] flex flex-col">
+                                        <img src="Oni-s3.png" alt="场景占位图" class="w-full aspect-video object-cover border-b-4 border-[#2D2422]">
+                                        <div class="p-5 flex flex-col grow">
+                                            <h4 class="font-black text-xl text-[#2D2422] mb-2">生鲜柜</h4>
+                                            <p class="text-sm font-bold leading-relaxed">失去了管理的生鲜区，似乎正在进行海洋和陆地的旷世之战。</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- 场景卡片 4 -->
+                                    <div class="bg-white border-4 border-[#2D2422] rounded-xl overflow-hidden hover:-translate-y-2 transition-transform shadow-[4px_4px_0px_0px_#2D2422] flex flex-col">
+                                        <img src="Oni-s4.png" alt="场景占位图" class="w-full aspect-video object-cover border-b-4 border-[#2D2422]">
+                                        <div class="p-5 flex flex-col grow">
+                                            <h4 class="font-black text-xl text-[#2D2422] mb-2">蔬菜仓库</h4>
+                                            <p class="text-sm font-bold leading-relaxed">除了蔬菜之外也堆放了许多杂物。喜爱健身者的圣地。</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- 场景卡片 5 (横跨整行) -->
+                                    <div class="bg-white border-4 border-[#2D2422] rounded-xl overflow-hidden hover:-translate-y-2 transition-transform shadow-[4px_4px_0px_0px_#2D2422] flex flex-col md:col-span-2">
+                                        <div class="flex flex-col md:flex-row">
+                                            <img src="Oni-s5.png" alt="场景占位图" class="w-full md:w-1/2 aspect-video object-cover border-b-4 md:border-b-0 md:border-r-4 border-[#2D2422]">
+                                            <div class="p-5 md:p-8 flex flex-col grow justify-center bg-[#FFF9F0]">
+                                                <h4 class="font-black text-xl md:text-2xl text-[#2D2422] mb-3 flex items-center gap-2">
+                                                    <i data-lucide="star" class="w-5 h-5 text-[#FFD93D] fill-[#FFD93D]"></i> “圣地”
+                                                </h4>
+                                                <p class="text-sm md:text-base font-bold leading-relaxed text-[#5C4F4D]">传说中的圣地，总是散发着耀眼的光辉。最近光辉突然暗淡，被许多家族的长老视为世界毁灭的前兆。</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 剧情/文案分页 -->
+                        <div id="tab-story" class="tab-content hidden animate-fade-in">
+                            <h2 class="text-2xl font-black mb-6 flex items-center gap-2">
+                                <div class="w-3 h-3 bg-[#FF6B6B] rounded-full border-2 border-[#2D2422]"></div> 剧情与文案
+                            </h2>
+                            <div class="space-y-6 text-[#5C4F4D] font-bold leading-relaxed text-justify text-sm md:text-base">
+                                <p>序章<p>传说，在遥远地方，跨过群山，跨过大海，存在着饭团一族的圣地。<p>那里无时不刻散发着耀眼的光辉，护佑着饭团一族。可是有一天，光芒突然暗淡。就像世界失去了太阳，饭团一族从此陷入破败的命运。根据传说，只有派出最勇敢的饭团勇者，经过重重磨难，抵达圣地重燃圣火，饭团一族才可重新兴盛。<p>【饭团长老】而今天，就是你，我们新的勇者，饭小白出征前往圣地的日子。<p>【饭小白】长老，我……我真的可以吗？<p>【饭团长老】相信你自己的力量。咳咳……（小声）没办法啊，你已经是饭团一族最后的希望了。<p>【饭小白】可是，之前出征的前辈一个都没有回来啊。<p>【饭团长老】没关系……好了，已经到时间了，快出发吧！</p>
+                                <div class="bg-[#FFF9F0] border-l-4 border-[#FF6B6B] p-4 italic">
+                                    “我不要做白米饭团了，长老！” —— <span class="font-black text-[#2D2422]">饭小白</span>
+                                </div>
+                                <p>羽毛笔奋笔疾书中TAT</p>
+                            </div>
+                        </div>
+
+                        <!-- 玩法设计分页 -->
+                        <div id="tab-gameplay" class="tab-content hidden animate-fade-in">
+                            <h2 class="text-2xl font-black mb-6 flex items-center gap-2">
+                                <div class="w-3 h-3 bg-[#4D96FF] rounded-full border-2 border-[#2D2422]"></div> 玩法与交互设计
+                            </h2>
+                            <div class="space-y-4 text-[#5C4F4D] font-bold leading-relaxed text-justify text-sm md:text-base">
+                                <p>《饭团的“神圣”使命》 是一款带有黑色幽默色彩的 2D 微观视角平台跳跃游戏。<p>玩家将扮演一颗脆弱的白米饭团“饭小白”,为了重燃家族的圣地之光,踏上了一场跨越厨房与储藏室的史诗朝圣。游戏中,玩家需要收集各种顶级食材(如极品糯米、金枪鱼片、海苔披风)作为“圣衣”武装自己,从而解锁飞檐走壁、冲刺滑翔等类银河恶魔城式的探索能力。在结识了一众性格迥异的微观世界NPC后,小白将抵达耀眼的圣地,揭开“神圣升华”背后令人啼笑皆非的残酷真相。</p>
+                                <div class="bg-gray-50 border-2 border-[#2D2422] p-4 rounded-xl">
+                                    <ul class="list-none space-y-3">
+                                        <li class="flex items-start gap-2">
+                                            <i data-lucide="check-square" class="w-5 h-5 text-[#38E54D] shrink-0 mt-0.5"></i>
+                                            <span><strong>类银技能锁：</strong>通过收集关键道具，解锁诸如二段跳、冲刺等能力。</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i data-lucide="check-square" class="w-5 h-5 text-[#38E54D] shrink-0 mt-0.5"></i>
+                                            <span><strong>饭团特色交互：</strong>可以使用诸如黏住、吸收等结合饭团特殊物理性质的小技能。</span>
+                                        </li>
+                                        <li class="flex items-start gap-2">
+                                            <i data-lucide="message-circle" class="w-5 h-5 text-[#FF9F43] shrink-0 mt-0.5"></i>
+                                            <span><strong>叙事交互点：</strong>计划加入各种收集类支线任务，用于扩展世界观、解锁成就和服装等。</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <!-- 代号：谢幕师-->
+    <script type="text/template" id="short-story-template-multi-tab">
+        <div class="min-h-screen bg-[#FFF9F0] text-[#2D2422] font-sans p-4 md:p-8" style="background-image: radial-gradient(#2D2422 1px, transparent 1px); background-size: 20px 20px;">
+            <div class="max-w-5xl mx-auto flex flex-col gap-6 pt-4 pb-20">
+                
+                <!-- 头部标题区 -->
+                <div class="pop-box p-6 md:p-10 bg-white relative overflow-hidden">
+                    <i data-lucide="star" class="absolute -right-4 -top-4 w-24 h-24 md:w-48 md:h-48 text-[#FF6B6B] opacity-30 transform rotate-12"></i>
+                    <h1 class="text-3xl md:text-5xl font-black tracking-tight mb-4 relative z-10">谢幕师</h1>
+                    <p class="text-[#5C4F4D] font-bold text-sm md:text-lg leading-relaxed relative z-10">
+                        一场意外,一个不该存在的人,一个本该死了却活着的人,和一个本该活着却不得不去死的人。在上演着各色戏码的天堂岛上，究竟如何才能找到自己的天堂？
+                    </p>
+                </div>
+
+                <!-- 导航页签区 -->
+                <div>
+                    <!-- 修复：为次级页面的多页签加入 drag-scroll 支持 -->
+                    <div class="flex space-x-2 md:space-x-4 border-b-4 border-[#2D2422] overflow-x-auto hide-scrollbar drag-scroll px-2 md:px-6 pt-2">
+                        <button onclick="switchTab('short-tab-1')" id="btn-short-tab-1" class="tab-btn px-4 md:px-6 py-3 font-black text-base md:text-lg bg-[#FFD93D] border-4 border-b-0 border-[#2D2422] rounded-t-2xl z-10 relative top-[4px] opacity-100 transition-all shrink-0 shadow-[0px_-2px_0px_0px_rgba(45,36,34,0.15)]">片段1</button>
+                        <button onclick="switchTab('short-tab-2')" id="btn-short-tab-2" class="tab-btn px-4 md:px-6 py-3 font-black text-base md:text-lg bg-[#FFF9F0] border-4 border-[#2D2422] border-b-0 rounded-t-2xl z-0 relative top-[4px] opacity-70 hover:opacity-100 hover:bg-[#FFE169] transition-all shrink-0">片段2</button>
+                        <button onclick="switchTab('short-tab-3')" id="btn-short-tab-3" class="tab-btn px-4 md:px-6 py-3 font-black text-base md:text-lg bg-[#FFF9F0] border-4 border-[#2D2422] border-b-0 rounded-t-2xl z-0 relative top-[4px] opacity-70 hover:opacity-100 hover:bg-[#FFE169] transition-all shrink-0">片段3</button>
+                    </div>
+                    
+                    <!-- 详情内容区 -->
+                    <div class="pop-box bg-white p-6 md:p-10 border-t-0 rounded-tl-none md:rounded-tl-none rounded-tr-none md:rounded-tr-2xl rounded-b-2xl shadow-[8px_8px_0px_0px_rgba(45,36,34,0.15)]">
+                        
+                        <!-- 故事片段 1 -->
+                        <div id="short-tab-1" class="tab-content block animate-fade-in">
+                            <h2 class="text-2xl font-black mb-6 flex items-center gap-2">
+                                <div class="w-3 h-3 bg-[#FFD93D] rounded-full border-2 border-[#2D2422]"></div> 剧情片段 1
+                            </h2>
+                            <div class="space-y-6 text-[#5C4F4D] font-bold leading-relaxed text-justify text-sm md:text-base">
+                                <p>“要开工了？”罗安轻轻把手推车停稳在老人身旁，压了压帽檐。<p>“你什么时候能改改这习惯。”老人抽了最后一口烟，将其掐灭后扔进挂载手推车旁的垃圾袋里，“还没有，不过我希望你能来看看。”
+<p>“为什么？您之前从不让我接触这些。”罗安娴熟地将周围散落的烟头一个个捡起，然后放进垃圾袋。
+<p>老人没有回答。罗安顺着他的目光看去，大概几百米的距离，广场上正在进行一场暴动。
+<p>“按照命令办事是我们这行的规矩没错，年轻人，可是你也要学会观察。”老人掏出纸烟盒，却发现里面已经空了，“啧……可惜了，捡来的时候就没剩多少。马上就是谢幕了。并不是所有清洁工作都如同捡垃圾一样简单。有时候，你得把那些粘在墙上的烦人东西扣下来。”
+<p>“我以为轮不到我。”罗安依旧站在老人身后半步远，一个刚好看不到面容的距离。
+<p>“总有一天会轮到你的。孩子，我们都是这么过来的。”老人把纸烟盒揉成一团，随手向后抛去，正落在垃圾袋里，“你很守规矩。”
+<p>“您教的好。”罗安低下头，避免看到老人的脸。
+<p>老人从口袋里掏出口罩戴上。
+<p>“别恭维了，我什么时候守过规矩。”老人从罗安的身边经过，用细微到只有他们两个能听到的声音说，“干完了记得去把杯子洗了，十个，然后放在左边第三个架子上。”
+<p>罗安没有抬头。等到老人的脚步消失，他才缓缓看向刚才的广场。人群已经在广场上扭打成一团。在混乱的正中心，一个癫狂的女人被绑上由一堆杂物搭成的处刑架。她狂笑的声音传不到这里。
+<p>这场景有些眼熟，罗安心想。不过，这个时代很难有什么是不眼熟的。管的太多和大惊小怪的都不是什么好习惯。
+<p>看了眼手表，罗安计算了一下时间，然后推起推车向电梯走去。
+<p>
+<p>广场上的好戏接近尾声。三个长相各异，衣着天差地别的人抱在一起。
+<p>“脑和手的中间必须有心！”
+<p>人群高喊着什么，然后散去。几分钟后，街巷间传来此起彼伏的轻微咔哒声，紧接着是倒地声。嘈杂的环境重新归于死寂。
+<p>“罗安就位。几件货物，多少时间？”罗安通过耳机询问。
+<p>“米勒收工。三件普通，巷子里；一件悬挂，广场上最显眼的那个。二十分钟。”
+<p>罗安听着老人在耳机那头点起烟，然后深深抽了一口。
+<p>推着清洁车转角进入广场，罗安顺着建筑的阴影接近中心的处刑架，快速将尸体装入裹尸袋，然后重新回到阴影里。
+<p>罗安感觉到不远处有几道影子也在快速闪动。看来有同行，罗安心想。很少有这样大规模的‘包装’任务，因为组成背景的普通人通常没什么回收的必要和价值。
+<p>听着动静平息，罗安才再次行动。
+<p>“包裹已到位，罗安撤离。”
+<p>按照定位回收了剩下三具尸体后，罗安将手推车留在指定位置，然后转身消失在小巷里。
+<p>在快要驶出街区的时候，罗安感觉到地面开始震动，但很快平息，几乎没有听到什么声音。
+<p>看来前两天流传的静音措施并非谣言，罗安暗自想着，规划着何时重返这里以熟悉新片场的构造。
+<p>
+<p>＊＊＊
+<p>
+<p>晚上十点，罗安准时来到天堂区的酒吧街，左手起第三间小酒馆。
+<p>“啤酒。”罗安在角落的桌子坐下。
+<p>“很准时。”声音从背后传来，然后声音的主人在桌子对面坐下，是老米勒。
+<p>罗安本能的想要低头，老米勒制止了他。
+<p>“没事，已经无所谓了。”
+<p>沧桑而又稳重的声音并没有打消罗安的顾虑，反而让他生出更多疑惑。
+<p>“规矩都是您教给我的。”罗安没有多问什么，抑制好奇心也是规矩的一部分。
+<p>“那就抬起头吧，假如你还愿意叫我一声老师。”老米勒将服务生端上来的酒杯推到罗安面前，“你好像总是喝啤酒。”
+<p>罗安犹豫了一下，缓缓抬头。他本以为会看到一双熟悉的眼睛和陌生的脸，出乎意料的是，就连眼睛也不是他记忆中的那样。
+<p>“如果有需要，我可以为您讲解几十种威士忌的区别。但是，低酒精总是相对稳妥的选择……”罗安看到老米勒的杯子里装的是调制伏特加，顿了一下，“这也是您教我的。”
+<p>“很疑惑？看到这样一张……新面孔？”老米勒没有理会罗安关于酒的解释，“我这一辈子也就你一个学生了。至少今天，我更愿意用真面目示人。”
+<p>罗安很快理解了老米勒话中的意思。他举起酒杯：“祝贺老师退休。”
+<p>老米勒摆摆手：“客套话就免了吧。你……这脸的技术倒是不错，没什么易容痕迹。”
+<p>“学生不习惯用。”罗安在自己脸上揉捏了一下，证明没有戴面具。
+<p>“被人看到总是麻烦事。”
+<p>“外边的人无所谓，里面的更是了。当然，口罩……学生一直按规矩戴着。”
+<p>二人间陷入了短暂的沉默。老米勒看向窗外。深夜的街道上依旧灯火通明，各家酒馆里传来大呼小叫的声音。
+<p>“后悔吗？”老米勒突然问。
+<p>“您指什么？”罗安有些不解。
+<p>“你本来能过普通人的生活的。这几年虽然我没让你动过手，但派下来之前的训练，你应该……你的成绩单可是优秀。”
+<p>“职责所在，拿钱办事。您知道的，那些……不能算人，我也只是干些体力活罢了。”
+<p>“你倒是看得开。我第一次干活的时候……算啦，不提这些陈芝麻烂谷子的事儿了。我退下来，‘包装’的活就得你做。好在还有几天，最后我再考核你一次。时间和地点都在这里了，别迟到。”
+<p>老米勒把一本圣经推过来，然后把杯中的酒一饮而尽，起身离开。
+<p>罗安看着圣经，连锁酒店里会有的经典款式。大概又是老米勒顺手拿走的吧，罗安想着，将圣经装进大衣内侧。
+<p>桌上的啤酒几乎没有减少，罗安叫来服务生付款离开。
+<p>人总是需要什么来麻痹自己的，但不该是酒，至少对于我来说。罗安这么想着，回忆起了那个遥远的下午。
+</p>
+                            </div>
+                        </div>
+
+                        <!-- 故事片段 2 -->
+                        <div id="short-tab-2" class="tab-content hidden animate-fade-in">
+                            <h2 class="text-2xl font-black mb-6 flex items-center gap-2">
+                                <div class="w-3 h-3 bg-[#FF6B6B] rounded-full border-2 border-[#2D2422]"></div> 剧情片段 2
+                            </h2>
+                            <div class="space-y-6 text-[#5C4F4D] font-bold leading-relaxed text-justify text-sm md:text-base">
+                                <p>没有工作的日子，罗安通常呆在天堂区的公寓里，极少外出。
+<p>完成今天的例行训练之后，罗安煮了一杯咖啡，开始从他的收藏中挑选今天要看的电影。
+<p>在这个时代，电影已经成为一种稀缺的奢侈品。而具有实体形式的电影更是堪称古董。罗安的薪水大部分都花在了这些被称为“光盘”的小玩意上。
+<p>思索良久，罗安最终还是抽出那张《银翼杀手2049》放入播放器，然后端着咖啡窝进沙发里。
+<p>距离和老米勒最后一次搭档还有三天。完成任务简单，但那之后呢？罗安思索着。他习惯了几年来作为回收负责人行动。老米勒退休后，公司会给他指派新的搭档吗？还是说学徒？又或者放任他独自行动？
+<p>没来由的焦虑已经让罗安无法专注在电影上，即使这是以往他最喜爱的放松活动。这种焦虑出自某种直觉，或是某种既视感，罗安心想。
+<p>上一次拿起枪是什么时候？
+<p>罗安关掉了全息屏幕，决定去浴室冲个澡，洗去这些杂乱的念头。
+<p>只是一次任务，罗安告诉自己，没什么可担心的。只是和老米勒的最后一次任务。结束之后，老米勒可以退休然后安享晚年，自己可以升职加薪，然后买更多的电影收藏。
+<p>水流顺着罗安的头发和脊背流下，最终流进角落的排水口，然后进入肮脏的下水道。
+<p>
+<p>＊＊＊
+<p>
+<p>罗安坐在闹市区的长椅上，看着身边的人流来来往往。
+<p>任务说明很含糊，只要求罗安在指定时间到达指定地点，却没有说清楚是什么内容。更奇怪的是，反而特别说明一定要带上武器。
+<p>公司的任务指示一般通过系统直接下达。虽然感到奇怪，但出于对老米勒的信任，罗安一开始并没有怀疑什么。
+<p>但是老米勒的频段已经静默很久了。
+<p>自从抵达人物地点，罗安每十分钟就尝试联络老米勒，但没有任何回应。
+<p>距离指定的时间还有十五分钟。
+<p>罗安闭上眼，感受着隐藏在大衣下的武器，在脑内演练了几次快速进入战斗状态的动作流程，又回忆了几遍出发前的确认工作。
+<p>人流带来的空气扰动，隔壁咖啡店的闲聊，信号灯的提示声，车辆行驶的引擎声。罗安努力从这些杂乱的声音中分辨可能是任务目标的线索。
+<p>“罗安，现在跑进身后的小巷子，然后右转！动作要快！”
+<p>耳机里突然传来老米勒急切的声音。来不及理清状况，多年的合作让罗安立刻意识到有危险，几乎是本能地从长椅上跳起。
+<p>“砰”的一声轻响，罗安感受到大腿上传来的疼痛。罗安快速看了一眼确认伤口――仅仅只是擦伤――紧接着就用最快的速度贴近巷子的墙边，然后向深处跑去。
+<p>遵照着指示右拐过后，罗安看到不远处有两个人影倒在地上。
+<p>罗安从身后抽出手枪，小心翼翼地接近。
+<p>“……罗安？”其中一个人影听到声响，挣扎着想要起身。
+<p>“米勒？是你吗？”罗安拿着枪继续接近。
+<p>“拿上，快走。还有几分钟就……快走……”
+<p>罗安跑到老米勒身边，接过他递来的一个包裹。
+<p>“谁干的……别急，我们先去最近的……”罗安搀扶着老米勒想要把他扶起来。
+<p>“他们发现我……快走……”老米勒把罗安推开，然后又把自己的身份牌塞给他，“到……找……”
+<p>罗安没有听清老米勒说了什么，来时的小巷已经传来了奔跑的声音。
+<p>强忍着大腿的疼痛，罗安向小巷的另一头跑去。
+<p>刚刚离开小巷，身后就传来了巨大的爆炸声。不明所以的人群躁动起来，有的慌乱而四处奔逃，有的则凑上前去看热闹。
+<p>趁着混乱，罗安消失在人群中。
+</p>
+                            </div>
+                        </div>
+
+                        <!-- 故事片段 3 -->
+                        <div id="short-tab-3" class="tab-content hidden animate-fade-in">
+                            <h2 class="text-2xl font-black mb-6 flex items-center gap-2">
+                                <div class="w-3 h-3 bg-[#4D96FF] rounded-full border-2 border-[#2D2422]"></div> 剧情片段 3
+                            </h2>
+                            <div class="space-y-6 text-[#5C4F4D] font-bold leading-relaxed text-justify text-sm md:text-base">
+                                <p>罗安没有回自己的住所，简单处理了伤口之后，直接前往了贫民区的黑市。
+<p>袭击自己和老米勒的人什么来头？同行？还是其他的势力？罗安思考着每一种可能，却依然毫无头绪。他们这种人虽然有表面上的身份，但一般也就是方便行动的清洁工什么的，几乎不可能和什么人结下仇怨，更别提如此大费周章地寻仇。
+<p>如果是同行的话……不可能啊，他和老米勒又不是需要谢幕的演员。而且最后那场爆炸弄出来的动静，也绝不是公司的手笔。
+<p>老米勒一定隐瞒了什么，但现在都无从知晓了。
+<p>“哟，李先生，什么风把您吹来了？刚巧到了一批电影，您等着，我这就去拿……”
+<p>看到罗安走进店铺，老板起身笑脸相迎。
+<p>“不必了林老板，今天要点别的。”罗安在椅子上坐下。李是他在黑市的化名。
+<p>“那今天要点什么？您知道的，小店从高端科技到低级娱乐，应有尽有。”林老板继续笑着问。
+<p>“消炎药、绷带、纱布、止疼片和这张单子上的药品。”罗安递过去一张纸条，思考过后，把自己和老米勒的身份牌也递了过去，“把这张身份牌里的退休信息复制进我的身份牌里面。”
+<p>原本笑着接过纸条的林老板笑容僵住了。
+<p>“李先生，药品都好说。只是您这第二项要求……”
+<p>“办不了？那我去找别人。”罗安没有废话，起身要走。
+<p>“不，不是。李先生，在这地界，我们一向不过问客人的身份，无论您是李先生还是别的什么先生。”林老板一副皮笑肉不笑的姿态。
+<p>“你威胁我？”
+<p>“怎么敢。小店只是还想把生意做下去罢了。看李先生的样子，应该和今天下午金城区的爆炸脱不了干系吧。”林老板接着说。
+<p>“哦？你知道什么内幕？”罗安没有明着回答他，做好了随时拔枪的准备。
+<p>“别紧张，您是我的大主顾。本店一切为客人着想。我确实知道一些公司的消息，只是这消息……也算是小店商品的一种。”
+<p>罗安点点头表示理解，但摸摸口袋，身上并没有什么值钱的东西。
+<p>“可以赊账么？”罗安抬头问林老板。
+<p>“可以。”林老板答应得很干脆，“虽说我们一概不问客人身份，但也隐约知道些内幕。您也是外边的人吧？”
+<p>“外边？”
+<p>“您住天堂区吗？”
+<p>“没错。”
+<p>“那就是了。只有外边的人才能住在天堂区。”
+<p>罗安大概理解了他的意思。所谓“外边”，应该是指公司派过来的人而非演员。
+<p>“既然如此，我只需要您帮我做件事。委托方出手很阔绰。”
+<p>“我答应。”
+<p>“您别急，您有这份心，就算是信任我。我先告诉您想要消息。”林老板凑近了说，“公司内部通报，代号K和代号Ks的两名谢幕师叛变，已经全部于今天下午的爆炸中丧生。公司对外的通报是燃气泄露的爆炸。”
+<p>叛变？罗安有些疑惑，谢幕师代号确实是他和老米勒的，但叛变是什么意思？
+<p>“因此，即使我帮您改了身份牌，一个死人重新出现，是无论如何都会引起怀疑的。”林老板继续说。
+<p>“谢谢。告诉我委托人的要求吧。”罗安说。
+</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <!-- 作品 7：遥-干员密录 -->
+    <script type="text/template" id="story-content-7">
+<p>“喂～收网啦？”
+<p>“是呀，收网啦。”
+<p>“今天怎么样啊？”
+<p>“比以往要好多啦！说出来你都不相信，今天的鳞像是不会游一样，就呆在那里让我捞呀。”
+<p>“一定能卖不少钱吧，滨本先生。你的好日子要来临啦。”
+<p>“你也不错啊，细川先生。令郎不是在那家工厂谋了个高官嘛。”
+<p>两位阿戈尔老友搭着肩，坐在码头上，朝远方那座正冒出黑烟的工厂看去。
+<p>袅袅升起的炊烟逐渐被工厂的烟尘取代，夕阳散在了那黑色的烟雾中。余晖被阻断，海面上自此失去了波光粼粼的景象。偶尔有一两只“呆傻”的鳞浮上水面，等待着打捞它的“幸运儿”。
+<p>但那又有什么关系呢。工厂建起来了，一切都会好的。
+<p>直到天空中盘旋的羽兽一头栽下，在它已无福享用的鳞群中间渐起不大不小的水花。
+<p>海洋早已不是阿戈尔人自认熟知的那样。
+<p>
+<p>这并不是干员遥第一次返回御机。事实上，相比于最初离开御机前往罗德岛时，遥现在的名气要大得多。
+<p>在和温蒂反复确认过后，遥带着证据和样本再一次踏上了返回御机的路。虽然并非执行任务，但考虑到这次返回御机也并非只是简单的摄制工作，星熊也曾提出同行，但被遥拒绝了。
+<p>“星熊姐……上次你斩断了自己的过去，这次轮到我了。”
+<p>刚从温蒂实验室出来的遥紧咬着嘴唇，眼角还噙着泪花。
+<p>“这次，回到御机的并非羽生萌萌香……而是紫野遥。”
+<p>
+<p>空气里本该只有空调暖风的干燥尘埃味，或者是文件刚打印出来的油墨味。遥在事务所的日子里已经习惯了这种味道。
+<p>但今天，这里有一股海腥味。
+<p>站在会议室的红木门外，由于过度紧张，遥感到自己的胃部似乎在痉挛。那股味道像是死去的鳞、腐烂的藻类和某种说不清道不明的金属锈味混合在一起，执拗地钻进她的鼻腔。
+<p>那是从这群“不速之客”身上散发出来的——他们就坐在走廊的大理石地板上，几十个阿戈尔人，像一群搁浅在都市海岸线上的巨型游鳞。
+<p>遥依稀能辨认几个熟悉的面孔，除了几个老人，还有一些年轻人的面容偶尔使她想起某个遥远的邻居。
+<p>他们是遥的同乡，至少曾经是。那股奇怪的气息，是遥已经十几年未曾闻到的家乡的气息，也是那种被诅咒的奇病的气息。
+<p>会议室巨大而空旷，长条形的桌子像一条冻结的河流。桌子的一端坐着公司的高层们。他们穿着剪裁得体的深灰色西装，头发梳得一丝不苟，像是一排毫无瑕疵的墓碑。
+<p>他们的眼神游离，盯着桌上的烟灰缸，或者窗外的护城河，唯独不看向对面，哪怕站着东国南院最富盛名的国民偶像。
+<p>桌子的另一边，站着遥，和曾经给她寄来那些珍贵照片的川本。
+<p>川本并不是那种看起来很有威严的领袖，遥心想，至少没有金兵卫那般咄咄逼人的气势。
+<p>他皮肤黝黑，双手粗糙得像两块老树皮。他穿着一件洗得发白的旧夹克，与这间奢华的会议室格格不入。但他坐在那里，腰杆挺得笔直，眼神像尖嘴羽兽一样死死钩住对面的社长。
+<p>“岛田社长，”川本的声音沙哑。遥已经记不清上一次听到这般海峰一样的嗓音是什么时候。
+<p>“你以前说，那是北院的阴谋，是误食有毒的鳞，反正不是你们的错。”
+<p>对面的一位常务董事清了清嗓子，试图打断：“川本先生，关于赔偿条款，我们的法务部门正在——”
+<p>“我不谈条款。”川本粗暴地打断了他，他从脚边的布袋里掏出了一个东西。
+<p>那是一个灵位。黑色的木牌，上面写着一个名字。
+<p>紧接着，坐在他身后的那些家属们，纷纷从怀里掏出灵位。一个，两个，十个……黑色的木牌很快摆满了半张会议桌。那些死者的名字，就像是一支沉默的军队，跨越了一千公里的距离，从后川的淤泥里爬到了御机最为重要的会议桌上。
+<p>遥看到，那位常务董事的喉结剧烈地滚动了一下。
+<p>“接下来的事，交给萌萌……交给遥小姐了。”川本用复杂的眼神看了遥一眼。
+<p>遥接过川本递来的牌位，原本抚摸话筒的手指轻轻抚着那个熟悉的名字。
+<p>“这是阿松婆婆，吃了你们毒死的鳞，发疯的时候把自己的嘴唇都咬烂了。”
+<p>“这是小健，生下来就不会笑，五岁就走了，骨头都是软的。”
+<p>遥每拿起一个牌位，就讲一句话。她的语气没有哭腔，甚至比当初在台上揭露金兵卫的阴谋时还要平淡。但这种平淡，比咆哮更让人窒息。
+<p>“我们不是来要钱的。”遥直视着岛田社长。
+<p>遥从随身的包中拿出从后川采取的样本。瓶底沉淀着黑色的淤泥，上面漂浮着一层诡异的油光。那是后川最大的捕鳞湾的海水，也是居民世世代代赖以生存、最后却杀死他们的海水。
+<p>遥一步步走向社长岛田。
+<p>对，就是这样，遥心想。我已经成长了，已经不是那个只会被怪谈吓到哭哭啼啼的小偶像了。
+<p>保安想要上前阻拦，但被其他家属那种从地狱归来般的气势震慑住了。他们的目光像一只只无形的手，生生把保安按在了原地
+<p>“社长，”遥把那瓶水轻轻放在岛田面前的红木桌面上，发出一声轻响。水瓶里的液体缓慢晃动着，就像遥记忆中家乡的海浪。
+<p>“你们的专家说，处理过的水是安全的，甚至可以喝。那就请您喝下去。”遥的声音在房间里回荡，“只要您喝了，我们就相信那是安全的。我们就回家。”
+<p>这个办法是星熊教给遥的。虽然看上去淡定，但遥心里仍有些不安。
+<p>根据罗德岛的检测数据，很难说喝下这杯水和得了矿石病哪个会死的更快一些。
+<p>时间仿佛凝固了。
+<p>遥已经开始在心里盘算，万一一会儿那个社长真打算喝下去，自己该用什么样的力度。罗德岛的教官总说遥在愤怒时控制不好力道，很不巧，遥清楚地知道自己此时很愤怒。
+<p>这种感情燃烧着，早已失去了爆发的念头，只是像海浪一样，一次又一次拍打在遥的心上。
+<p>窗外，新建的电视塔在暮色中闪烁着繁华的红光。
+<p>岛田社长依然坐着，他的脸像是一张东国古剧的面具，苍白而僵硬。他看着那瓶浑浊的水。在那层油膜的倒影里，他或许看到了自己的脸，或许看到了无数双扭曲的手脚。
+<p>汗水从他的鬓角流下来。
+<p>一滴，两滴。
+<p>他颤抖着伸出手，指尖触碰到了冰凉的玻璃瓶。全场所有人的视线都聚焦在那只手上——那是一只握惯了钢笔和印章的手，保养得体，没有一丝茧子。
+<p>但这只手现在却像得了后川的怪病一样，止不住地剧烈颤抖。
+<p>一秒。
+<p>十秒。
+<p>三十秒。
+<p>最终，手缩了回去。
+<p>岛田社长低下了头，整个人像是被抽走了脊梁骨，瘫软在真皮座椅上。他不敢喝。这沉默的拒绝，比任何法庭的判决书都要响亮，它承认了一切罪恶。
+<p>遥看着眼前这个崩溃的掌权者，心里深处凝固的恨意开始流动，继而被巨大的无奈冲淡，融入她早已无从寻找的那缕淡淡的乡愁。
+<p>“看来，这水真的很苦啊。”
+<p>遥没有再逼迫，只是轻轻叹了口气。
+<p>她想起自己和调香师小姐的那个下午。有关自己为什么连植物都难以养活，她们谈论了很多很多。
+<p>“遥小姐，虽然可能有些失礼，但是我在想，是不是因为遥小姐没有根呢？”
+<p>调香师手持喷壶，在温室的花丛中灵巧地穿梭着，精确控制着每一株植物所需的水分。
+<p>“没有……根？”
+<p>“植物总是要扎根才能长得茁壮，遥小姐的根又在哪里呢？”
+<p>遥一时语塞，她从未想过这个问题。御机吗？很难说，她在那里只是作为羽生萌萌香存在着。在脱离金石会的掌控之前，连生活都算不上。
+<p>那么，罗德岛吗？遥很喜欢罗德岛上的生活。每天认识不同的人，每天经历不同的事。更重要的是，在这里，遥可以作为遥而生活着。
+<p>在说出这个答案之前，遥的心里痒痒的。她不是忘记了那个答案，只是它在记忆中实在是太遥远，也太模糊。
+<p>最终也没有说出口。调香师小姐适时更换了话题。在那天下午有关培养植物的讨论中，遥在小本子上记了很多。等到翻看时，遥才惊讶的发现自己在笔记的边缘无数次写下了那个名字。
+<p>遥决定为那个名字做点什么。
+<p>幸运的是，在听说了遥的情况以及观看了那期有关奇病的节目后，温蒂主动找到了遥。
+<p>温蒂利用自己的海洋生物机器人在后川的捕鳞湾成功采样，并和清流以及整个医疗部开始攻克这种困扰遥家乡已久的奇病。
+<p>在遥和熟悉当地情况的干员的帮助下，罗德岛成功在后川设立了办事处――虽然名义上是治疗矿石病，但是前来接受治疗的奇病患者要多得多。
+<p>“遥小姐，要搬迁工厂恐怕难以实现。”
+<p>在得知了遥的愿望后，办事处的干员秘密调查了化工厂。那里面牵涉了复杂的关系，甚至可能与对北院的军事计划有关。贸然介入会置罗德岛于不利的境地。
+<p>“没关系，大家已经为我做了很多了……只靠我一个人，这些事情根本无从想象。”
+<p>在后川短暂停留的那个下午，遥坐在熟悉的秋千上，看着夕阳依旧如记忆中那样穿过缭绕的烟雾落下，沉入水面。
+<p>“小时候……水面也是这样折射出金色的光辉吗？”
+<p>遥没有被记忆的错觉困扰很久，也许那根本就不是错觉。重要的是，现在遥或许可以自信地回答调香师的问题。如果时光回到那个下午，也许她能更坚定地说出那个答案。
+<p>我的家……也许如今已经有了答案。但是这些人呢？他们的家又在哪里。
+<p>遥的思绪被响起的哭声拉回。起初很压抑，然后变成了号啕大哭。这并非乞求施舍的哭声，而是积压了数十年、终于撕开化工厂伪善面具后的宣泄。
+<p>遥走出了会议室，后川看向遥的眼神里此刻只剩感谢。
+<p>“还不够。”遥坐在出租车上，准备前往那场约定的演唱会。
+<p>岛田社长只是台前的人。然而即使是对于这个台前的人，一张罚单或是一张判决书，对于他来说和一张宴席的账单没什么区别。连台前的人都是如此，更别说那些在幕后，脑子里只有经济和北院的大人物们。
+<p>御机的夜晚和往常一样，霓虹灯牌下是风格杂糅、新旧交替的街道。从遥来到这里时就是如此。它也许永远不会变，又或许明天就变。
+<p>但那又有什么关系呢，遥心想着，挥出一串色彩斑斓的泡泡，从车窗飘向广袤的夜空。
+<p>毕竟，对于一粒深深扎根的种子来说，她只需要茁壮成长。
+    </script>
+
+    <!-- 艾格蕾特 次级页面模板 -->
+    <script type="text/template" id="arknights-profile-aigrette">
+        <div class="min-h-screen bg-[#1A1A1A] text-gray-300 font-sans p-4 md:p-8" style="background-image: radial-gradient(#333 1px, transparent 1px); background-size: 20px 20px;">
+            <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-6">
+                <!-- 左侧：干员立绘与基础资料卡 -->
+                <div class="w-full lg:w-1/3 flex flex-col gap-6">
+                    <div class="bg-[#242424] border border-[#444] rounded-sm p-2 relative overflow-hidden group">
+                        <div class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-[#4D96FF] z-10"></div>
+                        <i data-lucide="shield-half" class="absolute -bottom-4 -right-4 w-24 h-24 text-white opacity-5 transform rotate-12 z-0"></i>
+                        <div class="aspect-[3/4] bg-[#111] w-full relative z-1 flex flex-col items-center justify-center border-2 border-dashed border-[#444] group-hover:border-[#4D96FF] transition-colors">
+                            <i data-lucide="image-off" class="w-16 h-16 text-[#444] mb-4 md:mb-6 group-hover:scale-110 transition-transform"></i>
+                            <h1 class="text-3xl sm:text-4xl md:text-5xl font-black text-[#4D96FF] tracking-widest opacity-80 transform -rotate-12 select-none" style="font-family: 'Noto Sans SC', sans-serif;">画面缺失</h1>
+                            <p class="text-gray-500 mt-4 md:mt-6 text-xs md:text-sm font-bold tracking-widest">总之这里可能是一张立绘</p>
+                            <div class="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-[#242424] to-transparent"></div>
+                            <div class="absolute bottom-4 left-4 border-l-4 border-[#4D96FF] pl-3 text-left">
+                                <h2 class="text-2xl md:text-3xl font-black text-white tracking-widest uppercase">AIGRETTE</h2>
+                                <p class="text-[#4D96FF] text-xs font-bold tracking-wider mt-1">OPERATOR / 艾格蕾特</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-[#242424] border-l-4 border-[#4D96FF] p-4 md:p-5 relative">
+                        <i data-lucide="file-text" class="absolute right-4 top-4 w-12 h-12 md:w-16 md:h-16 text-white opacity-[0.03]"></i>
+                        <h3 class="text-white text-base md:text-lg font-bold mb-4 flex items-center gap-2 border-b border-[#444] pb-2 uppercase tracking-wider">
+                            <span class="w-2 h-2 bg-[#4D96FF]"></span> BASIC INFO
+                        </h3>
+                        <!-- 修复：移动端防止过长文字溢出 -->
+                        <div class="grid grid-cols-2 gap-y-3 gap-x-2 text-xs md:text-sm">
+                            <div class="text-gray-500">代号</div><div class="text-white font-bold break-words">艾格蕾特</div>
+                            <div class="text-gray-500">性别</div><div class="text-white font-bold break-words">女</div>
+                            <div class="text-gray-500">战斗经验</div><div class="text-white font-bold break-words">无</div>
+                            <div class="text-gray-500">出身地</div><div class="text-white font-bold break-words">拉特兰</div>
+                            <div class="text-gray-500">生日</div><div class="text-white font-bold break-words">5月12日</div>
+                            <div class="text-gray-500">种族</div><div class="text-white font-bold break-words">萨科塔</div>
+                            <div class="text-gray-500">身高</div><div class="text-white font-bold break-words">156cm</div>
+                            <div class="text-gray-500 col-span-2 mt-2">矿石病感染情况</div>
+                            <div class="text-[#38E54D] font-bold col-span-2 leading-relaxed">参照医学检测报告，确认为非感染者。</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-[#242424] p-4 md:p-5 relative overflow-hidden">
+                        <h3 class="text-white text-base md:text-lg font-bold mb-4 relative z-10 border-b border-[#444] pb-2 uppercase tracking-wider flex items-center gap-2">
+                            <span class="w-2 h-2 bg-white"></span> PHYSICAL EXAM
+                        </h3>
+                        <div class="space-y-3 md:space-y-2 text-xs md:text-sm relative z-10">
+                            <div class="flex justify-between items-center"><span class="text-gray-500 tracking-widest">物理强度</span><span class="text-[#FF6B6B] font-bold bg-[#333] px-2 py-0.5 border-l-2 border-[#FF6B6B] w-14 md:w-16 text-center">缺陷</span></div>
+                            <div class="flex justify-between items-center"><span class="text-gray-500 tracking-widest">战场机动</span><span class="text-white font-bold bg-[#333] px-2 py-0.5 border-l-2 border-white w-14 md:w-16 text-center">标准</span></div>
+                            <div class="flex justify-between items-center"><span class="text-gray-500 tracking-widest">生理耐受</span><span class="text-[#FFD93D] font-bold bg-[#333] px-2 py-0.5 border-l-2 border-[#FFD93D] w-14 md:w-16 text-center">优良</span></div>
+                            <div class="flex justify-between items-center"><span class="text-gray-500 tracking-widest">战术规划</span><span class="text-[#FFD93D] font-bold bg-[#333] px-2 py-0.5 border-l-2 border-[#FFD93D] w-14 md:w-16 text-center">优良</span></div>
+                            <div class="flex justify-between items-center"><span class="text-gray-500 tracking-widest">战斗技巧</span><span class="text-white font-bold bg-[#333] px-2 py-0.5 border-l-2 border-white w-14 md:w-16 text-center">标准</span></div>
+                            <div class="flex justify-between items-center"><span class="text-gray-500 tracking-widest">源石技艺</span><span class="text-white font-bold bg-[#333] px-2 py-0.5 border-l-2 border-white w-14 md:w-16 text-center">标准</span></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-[#1A1A1A] border-2 border-dashed border-[#444] p-4 flex items-start gap-4">
+                        <div class="w-10 h-10 md:w-12 md:h-12 bg-[#242424] rounded-sm flex items-center justify-center shrink-0 border border-[#333]">
+                            <i data-lucide="cake" class="w-5 h-5 md:w-6 md:h-6 text-[#FFD93D]"></i>
+                        </div>
+                        <div>
+                            <p class="text-white font-bold text-xs md:text-sm mb-1">【干员信物】</p>
+                            <p class="text-gray-400 text-xs leading-relaxed">一份来自东国的特色点心。在普遍清淡的饮食环境里有着萨科塔喜爱的甜度，是谁的乡愁，又是谁的感谢。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右侧：详细文本档案区 -->
+                <div class="w-full lg:w-2/3 flex flex-col gap-4 md:gap-6">
+                    <div class="bg-white text-[#111] p-3 md:p-4 flex justify-between items-center font-black">
+                        <div class="flex items-center gap-2 md:gap-3">
+                            <i data-lucide="folder-open" class="w-5 h-5 md:w-6 md:h-6 shrink-0"></i>
+                            <span class="text-base md:text-xl tracking-widest">RHODES ISLAND ARCHIVE</span>
+                        </div>
+                        <span class="text-[10px] md:text-sm border-2 border-[#111] px-1 md:px-2 py-1 shrink-0 text-center">AUTH: LV.3</span>
+                    </div>
+
+                    <div class="bg-[#242424] border border-[#444] p-4 sm:p-6 md:p-10 space-y-10 md:space-y-12 relative overflow-hidden">
+                        <div class="absolute top-4 right-4 md:top-6 md:right-6 border-2 border-gray-600/30 text-gray-600/30 text-sm md:text-xl font-black p-1 md:p-2 transform rotate-12 select-none tracking-widest">CONFIDENTIAL</div>
+
+                        <div class="bg-[#111] border-l-4 border-white p-4 md:p-5 italic text-gray-300 text-sm md:text-base">
+                            <p class="text-xs md:text-sm font-bold text-gray-500 mb-2 not-italic">【招聘合同】</p>
+                            <p>拉特兰医疗支援干员艾格蕾特，钻研罕见病的研究员。</p>
+                            <p>既然来自于圣城，自然要将福音广布大地，她如此坚信着。</p>
+                        </div>
+
+                        <div>
+                            <div class="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
+                                <h2 class="text-xl md:text-2xl font-bold text-white tracking-widest uppercase">客观履历</h2>
+                                <div class="flex-grow h-px bg-[#444]"></div>
+                            </div>
+                            <div class="text-gray-400 leading-relaxed md:leading-loose text-justify text-sm md:text-base">
+                                <p>艾格蕾特，拉特兰公民，适用拉特兰一至十三项公民权益。司提望区中心医院医院注册医师。在担任兰登卫队外勤随队医生时接触了来自东国的“怪病”患者，滞留当地提供医疗服务。经干员遥介绍加入罗德岛，在医疗部研究矿石病及各种罕见病。</p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
+                                <h2 class="text-xl md:text-2xl font-bold text-white tracking-widest uppercase">临床诊断分析</h2>
+                                <div class="flex-grow h-px bg-[#444]"></div>
+                            </div>
+                            <div class="bg-[#1A1A1A] p-4 md:p-5 border-l-2 border-[#38E54D] text-gray-300 text-xs md:text-sm font-mono leading-relaxed space-y-4">
+                                <p>造影检测结果显示，该干员体内脏器轮廓清晰，未见异常阴影，循环系统内源石颗粒检测未见异常，无矿石病感染迹象，现阶段可认为非矿石病感染者。</p>
+                                
+                                <div>
+                                    <span class="bg-[#333] text-white px-2 py-1 mr-2 inline-block mb-1">【体细胞与源石融合率】 0%</span>
+                                    <p class="mt-1 text-gray-400">干员艾格蕾特没有被源石感染的迹象。</p>
+                                </div>
+                                
+                                <div>
+                                    <span class="bg-[#333] text-white px-2 py-1 mr-2 inline-block mb-1">【血液源石结晶密度】 0.12u/L</span>
+                                    <p class="mt-1 text-gray-400">出身于司提望区唯一的医院，艾格蕾特所接受的教育和工作经历使她对源石的防护要超过大部分普通人。艾格蕾特大部分时间花在了研究矿石病之外的病症上，除了使用源石技艺，甚少接触源石。</p>
+                                </div>
+
+                                <div class="border-t border-dashed border-[#444] pt-4 text-gray-500 mt-4">
+                                    <p>“我觉得应该把检查的重心放在其他方面！天知道她都在和什么稀奇古怪的病打交道！”</p>
+                                    <p>“我之前从未在意全面体检的成本……罗德岛是如何控制的？如果那里的人们能定期体检的话——”</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-6 md:space-y-8">
+                            <div class="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
+                                <h2 class="text-xl md:text-2xl font-bold text-white tracking-widest uppercase">档案资料</h2>
+                                <div class="flex-grow h-px bg-[#444]"></div>
+                            </div>
+                            
+                            <div class="space-y-6">
+                                <div class="relative pl-4 md:pl-6 border-l border-[#444]">
+                                    <div class="absolute w-2 h-2 md:w-3 md:h-3 bg-[#4D96FF] left-[-4px] md:left-[-6px] top-1"></div>
+                                    <h4 class="text-white font-bold text-sm md:text-base mb-2">档案资料一</h4>
+                                    <p class="text-gray-400 text-sm md:text-base leading-relaxed text-justify">在干员蕾缪安的协助下，我们终于能够确定艾格蕾特的身份并非虚构。很抱歉初次见面就给艾格蕾特带来如此不好的体验，但她本人却显得不以为意。<br><br>“东国的警察盘查起来要比罗德岛严格的多。不过也不是不能理解，毕竟谁愿意相信一个带着守护铳满世界乱跑的萨科塔只是简单的医生呢？”<br><br>事实上，我们确实甚少接触来自拉特兰的医务人员。他们的有关信息几乎全部来自于拉特兰干员的描述。某位萨科塔干员曾经抱怨医疗部没有一位萨科塔的医生，因此很难顾及到微妙的细节。我们相信艾格蕾特的加入将在很大程度上改善这一状况。</p>
+                                </div>
+
+                                <div class="relative pl-4 md:pl-6 border-l border-[#444]">
+                                    <div class="absolute w-2 h-2 md:w-3 md:h-3 bg-white left-[-4px] md:left-[-6px] top-1"></div>
+                                    <h4 class="text-white font-bold text-sm md:text-base mb-2">档案资料二</h4>
+                                    <p class="text-gray-400 text-sm md:text-base leading-relaxed text-justify">和几乎所有萨科塔一样，干员艾格蕾特也有一把属于自己的守护铳。据艾格蕾特自己回忆，挑选守护铳是一段相当痛苦的经历。在几乎试遍了店里的所有型号，直到老板开始怀疑自己的手艺，艾格蕾特也没能找到那种“对的感觉”。<br><br>好在艾格蕾特的父母十分开明，他们对这件事情不甚在意。“既然有不喜欢甜品的萨科塔，那为什么不能有不喜欢铳的萨科塔呢？”（虽然大部分萨科塔干员对这句话的正确性表示质疑）<br><br>小艾格蕾特度过了一段没有守护铳的快乐日子，直到某次路过一家守护铳工坊时，她的目光被一把小巧精致的守护铳吸引。尽管老板一再表明那是一把型号早已过时的守护铳，也无法改变小艾格蕾特对它的喜爱。<br><br>“就像是看到了顺手的手术刀一般。”艾格蕾特如此描述。</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-[#1A1A1A] p-4 md:p-6 border-l-4 border-[#FFD93D] mt-8">
+                            <h4 class="text-white font-bold tracking-widest mb-3 md:mb-4 uppercase text-sm md:text-base">干员晋升记录</h4>
+                            <p class="text-gray-400 leading-relaxed text-justify text-xs md:text-sm">尽管有时在经济上有些困难，但罗德岛从不是一家拖欠干员薪水的公司。即使如此，我们观察到，艾格蕾特的经济状况似乎相当拮据。除了配备的标准制服，艾格蕾特几乎没有几件自己的衣服。<br><br>出于关心，华法琳曾经询问过艾格蕾特是不是遇到了什么经济上的困难，并得到了如下答复：<br>“赌博？负债？不不，完全没有，您误会了，华法琳医生。其实……是我的研究啦。”<br><br>艾格蕾特坦言，在工作之外，她一直在自费进行着自己的研究。由于是关于罕见病的治疗药物，很少有公司愿意投资此类研究。即使成功研制，由于艾格蕾特的善良，往往也很难从中收回成本。<br><br>“矿石病之外也有许多需要帮助的病人。也许罗德岛应该将他们也纳入帮助范围……非要说为什么的话，因为这才是医者的初心。”</p>
+                            <p class="text-gray-500 text-[10px] md:text-xs italic mt-4 text-right">——华法琳医生关于罗德岛次年度预算的提案</p>
+                        </div>
+
+                        <div class="mt-8 md:mt-12 border border-[#FFD93D]/50 bg-gradient-to-br from-[#FFD93D]/10 to-transparent p-4 md:p-6 relative">
+                            <i data-lucide="cpu" class="absolute right-2 top-2 md:right-4 md:top-4 w-8 h-8 md:w-12 md:h-12 text-[#FFD93D] opacity-20"></i>
+                            <h2 class="text-base md:text-xl font-black text-[#FFD93D] tracking-widest mb-2 flex items-center gap-2 leading-tight">
+                                <i data-lucide="package" class="w-4 h-4 md:w-5 md:h-5 shrink-0"></i>【干员模组】头饰护理套装
+                            </h2>
+                            <div class="w-full h-px bg-[#FFD93D]/30 mb-4 md:mb-6"></div>
+                            
+                            <div class="text-gray-300 leading-relaxed md:leading-loose text-xs md:text-sm space-y-4 text-justify font-serif">
+                                <p>“艾蕾，他们怎么看上去那么高兴……欸，你看上去也兴高采烈的，发生什么好事了吗？”<br>年幼的黎博利拉拉同样年幼的萨科塔，发出稚嫩的疑惑。</p>
+                                <p>“当然啦！这种感觉又香甜又激动，一定是那家甜品店又有新品了吧。你感觉不到……”萨科塔想起了学过的知识，呆呆地看着黎博利头顶空荡荡地空间。</p>
+                                <p>“没关系，感受不到也无所谓。反正我们天天都在一起，以后也永远会在 一起。有什么不能理解的情绪，几遍、几十遍、几百几千遍我都会讲给你听！”</p>
+                                <div class="text-center text-gray-500 my-2 md:my-4">***</div>
+                                <p>“医生……这种病我怎么没听过？一定不是严重的病对不对？”<br>“这种病的病例很少，上一次出现大概是一百年以前了。很抱歉，小艾蕾……”</p>
+                                <p>“艾蕾，这个……送给你。带着它，就像我一直陪着你一样，替我去看看那些我们约好要去的地方。”<br>“别这样……我们不是说好要一直在一起……”<br>“艾蕾……”</p>
+                                <p class="pt-2 md:pt-4 text-gray-400 italic">看着远处和同伴玩耍的小黎博利，萨科塔少女轻轻抚摸着自己的头饰。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <!--艾莉丝好感剧情-->
+    <script type="text/template" id="love-story">
+    <p>轻声下楼，却看见作为目的地的厨房中传出微弱的光亮。
+    <p>从半掩的门缝中看去，伊莉丝正系着围裙，在忙碌着什么。旁边的烤箱正在工作，发出轻微的嗡嗡声。
+    <p>看到伊莉丝专心的样子，我打算放弃喝水计划，准备转身回房间。
+    <p>但伊莉丝却正好回头看到了我，招招手示意我过去。
+    <p>我轻轻推开厨房的门走进去，还没来得及说一句话，就被伊莉丝用手势制止。紧接着，她把一块像是曲奇的东西塞进了我嘴里。
+    <p>“嘘……小点声，别把医生吵醒了。”伊莉丝示意我安静，“这盘是刚出炉的，你尝尝，还有没有什么要改进的地方？”
+    <p>我一边咀嚼着曲奇，一边听着伊莉丝的碎碎念。
+    <p>“如果味道不好的话一定要说哦……我也好久没有做曲奇了……医生买的茶点总是一个味道，而且吃起来一点都不好吃……很快就会吃腻的啦……你们平时真的不觉得吗？”
+    <p>伊莉丝一边说着，一边又把一盘小蛋糕塞进了刚烤完曲奇的烤箱。
+    <p>“而且平时也没什么餐后甜点……虽然从面包店也可以买……但果然还是想自己做啊……”
+    <p>伊莉丝终于闲了下来，摘掉手套靠在墙边休息。
+    <p>“味道怎么样？会不会很怪？”看我吃完了那块曲奇，伊莉丝开口问道。
+    <p>“嗯……味道很好。只是好像有些太甜了。我记得……医生也不是特别喜欢很甜的东西。是糖放多了吗？而且好大，已经脱离茶点的范畴了吧。“我认真地发表了感想。
+    <p>“这样吗……我记得的配方应该没错来着……但是分量……以前总被抱怨太小了来着……”伊莉丝自言自语着，也拿起一块曲奇放进嘴里。
+    <p>“没关系，已经很好吃了。只是我和医生都不太擅长特别甜的东西而已。“我尝试安慰她，尽管伊莉丝看上去并没有很失落。
+    <p>“谢谢，不过，要是不能做出符合喜好的口味的话，会有损我天下第一大厨的名号的。”伊莉丝回答，“我等一下再做一点，你先把这盘消灭掉。”
+    <p>说完，伊莉丝把那盘曲奇塞到我手里。
+    <p>“你对自己的要求真高啊……”我看着一大盘曲奇，从中挑出一块相对较小的，“说起来，你之前都是怎样生活的啊。不仅知道那么多好的店铺，做饭也这么好，还会做这些小甜点。简直就像是超人一样。”
+    <p>“超人……吗……”伊莉丝念叨着，沉默了下来。
+    <p>我忽然想起上次问道关于伊莉丝的家人的时候，她也是这样沉默着。
+    <p>“对不起，我……”我感到有些抱歉，似乎是问了不该问的问题。
+    <p>“没关系，你不用道歉的。”伊莉丝打断我，“告诉你……应该也没关系吧。”
+    <p>伊莉丝从盘子里捏起一块曲奇，咬下一口。
+    <p>“其实我之前的很长一段时间都在孤儿院生活。”
+    <p>没等我消化这有些令人震惊的信息，伊莉丝继续说：
+    <p>“现在的我，有记忆开始就在孤儿院生活了。据院长说，他是在孤儿院的门口发现我的。当时我发着高烧，就那么倒在门口。除此之外没有任何信息。而且奇怪的是，即使后来康复退烧，我也没有任何有关来到孤儿院之前的记忆，连名字和年龄也不记得。
+    <p>“总之我就在孤儿院住了下来。稍微长大一点后，就帮着院长干点杂活……采购啊做饭啊，也是在那时候学会的。
+    <p>“本来我以为，平静的生活会这样一直持续下去……“
+    <p>“……”
+    <p>我不知道说什么好，伊莉丝的眼角已经有些泪花。
+    <p>“后来，突然有一天，一个自称原点公司业务员的人找上门，说我们孤儿院的土地合同已经到期，如果不能续租，就要强制把我们赶走。
+    <p>“院长维持孤儿院的运营已经很艰难了，更别提续费的租金也是一笔天文数字。
+    <p>“我想尽了一切办法，尝试过求助，也尝试过打工。可惜要在期限前凑齐这笔钱终究还是不可能的。但是一个人找上了我。
+    <p>“根据他的联络，他可以帮孤儿院找一份新的选址。但是……需要我帮他干活……”
+    <p>“调查公司……是吗……”我给伊莉丝递了张纸巾。
+    <p>伊莉丝轻轻擦了一下眼角，继续说：“是的……而且他说，公司里有关于我过去的真相。”
+    <p>“你的过去……等等，你告诉我这些没问题吗？”
+    <p>“欸？应该是没关系的……那个人没有要求我保密……而且你……也不像是坏人。”
+    <p>我对这个回答一时有些无语。
+    <p>“好吧，所以他要求你去公司调查什么？”我问道。
+    <p>“他倒也没有要求什么……只说看到有像是机密的东西就告诉他。”
+    <p>“听上去好不靠谱……”我吐槽道。
+    <p>“不过他确实解决了孤儿院选址的问题，我也就时不时帮他调查一下公司。那天第一次直接潜入公司……就遇到了你。”
+    <p>“叮~”烤箱发出了任务完成的声音。
+    <p>“来尝尝我做的抹茶蛋糕吧，记得告诉我改进建议哟~”
+    <p>伊莉丝又恢复了以往充满活力的样子。
+    <p>
+    <p>***
+    <p>
+    <p>提着满满的购物袋，我和伊莉丝走在回去的路上。
+    <p>“谢谢你，每次都陪我出来采购。”伊莉丝说。
+    <p>“不用谢啦……这也算是我的工作吧。不来帮忙的话可是会被医生扣工资的。”
+    <p>“哦？那就是说，如果不扣工资，你就不会陪我出来咯？”
+    <p>我没想到还有这种角度，一下被问住了。
+    <p>“这……”我还没想好如何回答。
+    <p>“欸？哪里什么时候新开了一家甜品店啊？”伊莉丝没有在意我的窘迫，拉着我往甜品店跑去。
+
+    <p>甜品店里，伊莉丝正在面对着各种各样的甜品犯难。
+    <p>“这个看上去好吃……这个看上去也不错……那个是之前没见过的口味？啊……好难选……”
+    <p>“看着也不是很贵……要不全买了？”
+    <p>伊莉丝用“啊你这个有钱人又在说这种话”的眼神瞪了我一眼。
+    <p>“不是钱的问题，是吃不完啦，那么多。除非……”
+
+    <p>甜品店外的小桌前，我和伊莉丝正在努力的消灭甜品。
+    <p>“我就开个玩笑，你真要陪我一起吃呀。”
+    <p>“这样你不就每样都可以尝一些了嘛。”
+    <p>“但是你之前不是说不太喜欢甜食吗？”
+    <p>“偶尔吃一些还是没问题的。”
+    <p>“这样么……那麻烦你啦~”
+
+    <p>我和伊莉丝把剩下的包装袋收拾好扔进垃圾桶，继续往回走。
+    <p>“好久没有和别人一起吃甜品了。”
+    <p>“以前和孩子们在一起的时候，因为条件有限，没办法做出多样的饭菜，孩子们也有挑食的时候。我就会买一些便宜的小甜品，或者自己烤一些曲奇给孩子们吃。”
+    <p>“原来如此。”
+    <p>“之前在孤儿院附近也有一家小甜品店。我有时间也会去帮工挣点零花钱，顺便锻炼一下制作甜点的技术。”
+    <p>“店主人也很好，有一年圣诞节，她送给我一个小挎包。就是现在……呃……之前丢了的那个……”
+    <p>伊莉丝的语气和申请都低落了下来。
+    <p>虽然之前她说过丢了也没关系，但果然对她来说那还是很重要的东西吧。
+    <p>低落的气氛没有持续很久，伊莉丝很快找到了有趣的话题。
+
+    <p>回到诊所，我和伊莉丝正在把食材整理放进冰箱的时候，医生忽然叫住了我。
+    <p>“你们出去的时候，有个快递送过来。好像是你的，我就放在你房间里了。”
+    <p>快递……难道是……
+    <p>“你又买了什么啊？”伊莉丝好奇地从厨房探出头，“不是说日常用品都交给我采购吗？”
+    <p>“秘密。”
+    <p>“怎么这样！坏蛋！把那袋蔬菜递给我。”伊莉丝一边对我的保密表示不满，一边继续使唤我干活。
+
+    <p>回到房间，我拆开快递箱。果不其然，是我拜托院长找的东西。
+    <p>“你说伊莉丝的挎包……那个款式好像是……哎呀，我不是很会描述。”听到我的问题，院长挠了挠头。
+    <p>“没关系，相似的也可以。如果您见到的话，直接买下来和账单一起寄给我就行。”
+    <p>我曾经这么拜托院长。
+    <p>“既然你都这么说了……那我努力找找吧，不确定厂家还有没有在生产。我去之前市场的几个老朋友那里问问好啦。”
+    <p>“麻烦您了。”
+    <p>挪开纸箱里用来保护的泡沫纸，一个精致的小挎包安静的躺在纸箱里。
+    <p>“原来是这样的吗……很适合伊莉丝的风格呢。”
+
+    <p>“伊莉丝，在忙吗？”
+    <p>我走下楼，推开厨房的门。
+    <p>“嗯……不算很忙，刚洗好菜。怎么啦？”
+    <p>我把崭新的小挎包递给她。
+    <p>“对不起，我回去找了也没能找到你的包……就又买了一个送给你……就当是，就当是补给你今年的生日礼物吧！虽然可能和你原来的包不太一样，而且我也不知道你的生日……”
+    <p>考虑到答应过院长，我没有把拜托院长帮忙的事说出来。
+    <p>“！”
+    <p>伊莉丝没有接包，反而是直接冲上来抱住了我。
+    <p>“谢谢你……”
+    <p>随后像是意识到什么，伊莉丝飞速松开了我，往后退了两步。
+    <p>傍晚的夕阳正好低下头，透过窗子望着发生的一切。光芒透过她的发丝，轻轻抚过红扑扑的脸颊。我从未见过如此可爱的伊莉丝。
+    <p>“我……我很开心，甚至有些开心过头了也说不定……”
+    <p>伊莉丝接过包，像是在保护什么重要的东西一样抱在怀里。
+    <p>“这份礼物……我会珍惜的。谢谢你的生日礼物，虽然……我也不知道我的生日在什么时候啦。”
+    <p>伊莉丝低着头思考了一会儿。
+    <p>“不如，就当成是今天吧！想吃什么？今天我做一顿大餐！”
+    <p>“伊莉丝，那个……”
+    <p>“嗯？”
+    <p>“之前说的……即使和工资没关系，我也非常乐意和你一起出去的。”
+    <p>“！“
+    <p>伊莉丝愣了一下，随即转过身去。
+    <p>“……“
+    <p>伊莉丝好像小声嘟囔了什么，但是我没听清。
+    <p>“什么？“我尝试询问。
+    <p>“什么也没有啦！快点出去，大厨要做饭啦！你留在这里会打扰我的！”
+    <p>伊莉丝把我推出了门，我之前都不知道她有这样大的力气。
+    <p>夕阳饶有兴致地看着，阳光洒落在阴影里，在那道门后，我不知道的地方，见证着少女在厨房的忙忙碌碌。
+    <p>“傻瓜……“
+    
+    </script>
+
+    <!--城市精神病开头-->
+    <script type="text/template" id="mental-illness-story">
+    <p>下午大概一点，我准时被楼下的运货车吵醒。
+    <p>那辆运货车总是这个时候来，给楼下的饭馆还是什么店铺送货。对于需要午睡的人来说，这大概是一种不幸。但是对于我来说，对于一个作息颠三倒四，它倒成了我最准时的闹铃。
+    <p>我泡上一杯咖啡，从桌上一堆杂乱无章的文件中翻出今天下午的预约表格。
+    <p>"今天下午……没错。"我喃喃自语着，检查着上面的时间和名字。
+    <p>我是一名心理咨询师，或者心理医生。随你怎么称呼这个职业，你叫我话聊师也无可厚非，虽然我并没有能随时掏出《母猪的产后护理》的神奇能力。
+    <p>当然，对于工作的内容，你或许有一些刻板印象，像是催眠，又像是微表情分析，甚至想象我可以读出你现在的想法。
+    <p>你在想……这人怎么这么不着边际，对吧。
+    <p>如果我猜对了，那是碰巧。假如我幸运地蒙出了正确答案，只能说，这确实运用了一些无聊的心理学小知识。而如果我的答案才是更加不着边际的那个，恭喜你打破了一个刻板印象。
+    <p>我一边喝着咖啡，一边想着这些无聊的事情。事实上并没有听众，但我在对着空气表演，仿佛总有一天会有哪个名牌大学会邀请我去演讲。
+    <p>随手把咖啡杯放下，胡乱塞了几口面包，我开始尝试让自己进入到工作状态。至少，工作前的准备状态。
+    <p>现在的时间是下午两点不到，客人预约的时间是三点半。我还有一个多小时的时间准备。
+    <p>或许我可以收拾一下房间，这样可以让我看上去更专业一点。又或者……去储物间里翻找一下大学时期的心理学课本。
+    <p>我百无聊赖的在椅子上打着转，一左一右的摇晃中环视着自己杂乱的出租屋。
+    <p>对于大多数人来说，这是一个极其美妙的时代。在刚刚经历过的陨石危机的余波中，一种劫后余生的快感让每个人都有了喘口气的机会。但很显然，我并不在他们之中。
+    <p>出于对发展的渴望，又或者直白一点出于对生存的渴望……或者他妈的直白一点就是人类贪生怕死的本性，在面对陨石危机的几十年间，人类的教育体系彻底失衡了。几乎所有的资源，人力也好物力也好，都投入到了科技的研发之中，期望能够有天才站出来找到避免和恐龙一个结局的方法。幸运的是，虽然没有一个具体的天才，但资源的堆砌最终让人类做到了。
+    <p>全世界最顶尖的几十个疯子聚集在一起，互相交流着他们的想法。啊……那是怎样的一副画面呢……是不是有些人会是标准的理科战神长相，又或者，会不会有人一脸严肃，但是身上的痛衣早早出卖了他。
+    <p>不管怎样，这些人做到了。而结果就是，像我这样没什么所谓的科技含量的专业被彻底地打入冷宫。什么？你说是人总会有心理问题的？得了吧，现在谁还看心理医生啊。搭载超高级人工智能的虚拟伴侣、能让你去到任何地方的沉浸式设备……哪个不比来我这狭小的出租屋里听一个废物重复一些课本上的理论有趣？哦，当然，是我这种传统的心理学废物。
+    <p>尽管无法改变结局，但是心理学在转型和高科技结合上也做了不小的尝试。那几年由科技巨擎投资的学科创新大赛多的如同下水道里的蟑螂——这并不是什么贬低性的称呼，而是财大气粗的老板给我们创造的一堆学术垃圾发奖金实在是令人忍俊不禁。
+    <p>我也一样，大学毕业后尝试加入了一家研究室，期待能搞点名堂的同时混到我的硕士学位。说是加入，其实除了这家研究室的导师主动邀请我，别的导师都一概拒绝了。我在心理学界就是这样一个废物啊。
+
+    </script>
+</body>
+</html>
